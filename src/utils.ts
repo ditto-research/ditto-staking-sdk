@@ -1,4 +1,4 @@
-import { ditto as Ditto } from "./ditto";
+import { dittoClient as DittoClient } from "./ditto-client";
 import { MaybeHexString, FaucetClient, HexString } from "aptos";
 import { Transaction, EntryFunctionPayload } from "aptos/dist/generated";
 import { Wallet } from "./wallet";
@@ -13,10 +13,10 @@ export async function processTxn(
   let txnHash: { hash: string } = await wallet.signAndSubmitTransaction(
     payload
   );
-  await Ditto.aptosClient.waitForTransaction(txnHash.hash);
+  await DittoClient.aptosClient.waitForTransaction(txnHash.hash);
   let txnInfo: Transaction;
   try {
-    txnInfo = await Ditto.aptosClient.getTransactionByHash(txnHash.hash);
+    txnInfo = await DittoClient.aptosClient.getTransactionByHash(txnHash.hash);
   } catch (e) {
     throw Error("Transaction hash can't be found.");
   }
@@ -34,7 +34,7 @@ export async function processTxn(
 export async function getAccountAptosBalance(
   accountAddr: MaybeHexString
 ): Promise<number | null> {
-  const resource = await Ditto.aptosClient.getAccountResource(
+  const resource = await DittoClient.aptosClient.getAccountResource(
     accountAddr,
     "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>"
   );
@@ -48,9 +48,9 @@ export async function getAccountAptosBalance(
 export async function getAccountStAptosBalance(
   accountAddr: MaybeHexString
 ): Promise<number | null> {
-  const resource = await Ditto.aptosClient.getAccountResource(
+  const resource = await DittoClient.aptosClient.getAccountResource(
     accountAddr,
-    `0x1::coin::CoinStore<${Ditto.contractAddress}::staked_coin::StakedAptos>`
+    `0x1::coin::CoinStore<${DittoClient.contractAddress}::staked_coin::StakedAptos>`
   );
   if (resource == null) {
     return null;
@@ -60,9 +60,9 @@ export async function getAccountStAptosBalance(
 }
 
 export async function getStAptosInfo(): Promise<programTypes.CoinInfo> {
-  const resource = (await Ditto.aptosClient.getAccountResource(
-    Ditto.contractAddress.toString(),
-    `0x1::coin::CoinInfo<${Ditto.contractAddress}::staked_coin::StakedAptos>`
+  const resource = (await DittoClient.aptosClient.getAccountResource(
+    DittoClient.contractAddress.toString(),
+    `0x1::coin::CoinInfo<${DittoClient.contractAddress}::staked_coin::StakedAptos>`
   )) as any;
   if (resource == null) {
     return null;
@@ -87,7 +87,7 @@ export async function fundAccount(
 export async function getStakePoolResource(
   validatorKey: HexString
 ): Promise<any> {
-  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
+  let validatorStakePool = await DittoClient.aptosClient.getAccountResource(
     validatorKey,
     "0x1::stake::StakePool"
   );

@@ -6,7 +6,7 @@ import * as utils from "./utils";
 import { Wallet, DummyWallet } from "./wallet";
 import { TableItemRequest } from "aptos/dist/generated";
 
-export class Ditto {
+export class DittoClient {
   public get isInitialized(): boolean {
     return this._isInitialized;
   }
@@ -32,20 +32,20 @@ export class Ditto {
   }
   private _wallet: Wallet;
 
-  public get DittoConfig(): programTypes.DittoConfig {
-    return this._DittoConfig;
+  public get dittoConfig(): programTypes.DittoConfig {
+    return this._dittoConfig;
   }
-  private _DittoConfig: programTypes.DittoConfig = null;
+  private _dittoConfig: programTypes.DittoConfig = null;
 
-  public get DittoPool(): programTypes.DittoPool {
-    return this._DittoPool;
+  public get dittoPool(): programTypes.DittoPool {
+    return this._dittoPool;
   }
-  private _DittoPool: programTypes.DittoPool = null;
+  private _dittoPool: programTypes.DittoPool = null;
 
-  public get ValidatorWhitelist(): programTypes.ValidatorWhitelist {
-    return this._ValidatorWhitelist;
+  public get validatorWhitelist(): programTypes.ValidatorWhitelist {
+    return this._validatorWhitelist;
   }
-  private _ValidatorWhitelist: programTypes.ValidatorWhitelist = null;
+  private _validatorWhitelist: programTypes.ValidatorWhitelist = null;
 
   public get verifyTxnTimeoutMs(): number {
     return this._verifyTxnTimeoutMs;
@@ -53,11 +53,11 @@ export class Ditto {
   private _verifyTxnTimeoutMs: number;
 
   public async load(
+    wallet: Wallet = new DummyWallet(),
     network: types.Network,
     nodeUrl: string,
     contractAddress: HexString,
-    verifyTxnTimeoutMs: number,
-    wallet: Wallet = new DummyWallet()
+    verifyTxnTimeoutMs: number
   ) {
     this._network = network;
     this._aptosClient = new AptosClient(nodeUrl);
@@ -172,23 +172,23 @@ export class Ditto {
       userClaimStateTableKeys.push(key);
     }
 
-    this._DittoPool = {
-      total_aptos: BigInt(resource.data.total_aptos),
-      aptos_buffer_amount: BigInt(resource.data.aptos_buffer.value),
-      pending_stake_amount: BigInt(resource.data.pending_stake.value),
-      treasury_amount: BigInt(resource.data.treasury.value),
-      validator_states: {
+    this._dittoPool = {
+      totalAptos: BigInt(resource.data.total_aptos),
+      aptosBufferAmount: BigInt(resource.data.aptos_buffer.value),
+      pendingStakeAmount: BigInt(resource.data.pending_stake.value),
+      treasuryAmount: BigInt(resource.data.treasury.value),
+      validatorStates: {
         keys: validatorStatesTableKeys,
         handle: resource.data.validator_states.table.handle,
       },
-      last_update_timestamp: BigInt(resource.data.last_update_timestamp),
-      total_pending_claim: BigInt(resource.data.total_pending_claim),
-      claim_pool_amount: BigInt(resource.data.claim_pool.value),
-      user_claim_state: {
+      lastUpdateTimestamp: BigInt(resource.data.last_update_timestamp),
+      totalPendingClaim: BigInt(resource.data.total_pending_claim),
+      claimPoolAmount: BigInt(resource.data.claim_pool.value),
+      userClaimState: {
         keys: userClaimStateTableKeys,
         handle: resource.data.user_claim_state.table.handle,
       },
-      validator_tickets_table_handle: resource.data.validator_tickets.handle,
+      validatorTicketsTableHandle: resource.data.validator_tickets.handle,
     };
   }
 
@@ -201,12 +201,12 @@ export class Ditto {
       throw Error("DittoConfig fetch returned null");
     }
 
-    this._DittoConfig = {
-      pool_buffer_pct: BigInt(resource.data.pool_buffer_pct),
-      rewards_fee_pct: BigInt(resource.data.rewards_fee_pct),
-      protocol_fee_share_pct: BigInt(resource.data.protocol_fee_share_pct),
-      instant_unstake_fee_bps: BigInt(resource.data.instant_unstake_fee_bps),
-      require_validator_whitelist: resource.data.require_validator_whitelist,
+    this._dittoConfig = {
+      poolBufferPct: BigInt(resource.data.pool_buffer_pct),
+      rewardsFeePct: BigInt(resource.data.rewards_fee_pct),
+      protocolFeeSharePct: BigInt(resource.data.protocol_fee_share_pct),
+      instantUnstakeFeeBps: BigInt(resource.data.instant_unstake_fee_bps),
+      requireValidatorWhitelist: resource.data.require_validator_whitelist,
     };
   }
 
@@ -219,8 +219,8 @@ export class Ditto {
       throw Error("UnstakeTracker fetch returned null");
     }
 
-    this._ValidatorWhitelist = {
-      whitelist_table_handle: resource.data.whitelist.handle,
+    this._validatorWhitelist = {
+      whitelistTableHandle: resource.data.whitelist.handle,
     };
   }
 
@@ -245,16 +245,16 @@ export class Ditto {
     };
 
     let item = await this._aptosClient.getTableItem(
-      this._DittoPool.validator_states.handle,
+      this._dittoPool.validatorStates.handle,
       tableItemReq
     );
 
     return {
-      owner_capability: {
-        pool_address: new HexString(item.owner_capability.pool_address),
+      ownerCapability: {
+        poolAddress: new HexString(item.owner_capability.pool_address),
       },
-      start_of_epoch_balance: BigInt(item.start_of_epoch_balance),
-      distributed_balance: BigInt(item.distributed_balance),
+      startOfEpochBalance: BigInt(item.start_of_epoch_balance),
+      distributedBalance: BigInt(item.distributed_balance),
     };
   }
 
@@ -270,7 +270,7 @@ export class Ditto {
     };
 
     let item = await this._aptosClient.getTableItem(
-      this._DittoPool.validator_tickets_table_handle,
+      this._dittoPool.validatorTicketsTableHandle,
       tableItemReq
     );
 
@@ -279,7 +279,7 @@ export class Ditto {
     for (let i = 0; i < item.length; i++) {
       delayedUnstakeTickets.push({
         user: new HexString(item[0].user),
-        aptos_to_receive: BigInt(item[0].aptos_to_receive),
+        aptosToReceive: BigInt(item[0].aptos_to_receive),
       });
     }
     return delayedUnstakeTickets;
@@ -297,13 +297,13 @@ export class Ditto {
     };
 
     let item = await this._aptosClient.getTableItem(
-      this._DittoPool.user_claim_state.handle,
+      this._dittoPool.userClaimState.handle,
       tableItemReq
     );
 
     return {
-      available_claim: BigInt(item.available_claim),
-      pending_claim: BigInt(item.pending_claim),
+      availableClaim: BigInt(item.available_claim),
+      pendingClaim: BigInt(item.pending_claim),
     };
   }
 
@@ -317,7 +317,7 @@ export class Ditto {
     };
 
     let item = await this._aptosClient.getTableItem(
-      this._ValidatorWhitelist.whitelist_table_handle,
+      this._validatorWhitelist.whitelistTableHandle,
       tableItemReq
     );
 
@@ -330,4 +330,4 @@ export class Ditto {
 }
 
 // Ditto singleton.
-export const ditto = new Ditto();
+export const dittoClient = new DittoClient();

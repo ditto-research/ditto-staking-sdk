@@ -1,4 +1,3 @@
-import { ditto as Ditto } from "./ditto";
 import * as types from "./types";
 import { Wallet } from "./wallet";
 import * as payload from "./payload";
@@ -20,22 +19,14 @@ export class DittoUser {
   }
   private _verifyTxnTimeoutMs: number;
 
-  private constructor(
+  public constructor(
+    wallet: Wallet,
     network: types.Network,
-    verifyTxnTimeoutMs: number,
-    wallet: Wallet
+    verifyTxnTimeoutMs: number
   ) {
     this._network = network;
-    this._verifyTxnTimeoutMs = verifyTxnTimeoutMs;
     this._wallet = wallet;
-  }
-
-  public static load(
-    network: types.Network,
-    verifyTxnTimeoutMs: number,
-    wallet: Wallet
-  ): DittoUser {
-    return new DittoUser(network, verifyTxnTimeoutMs, wallet);
+    this._verifyTxnTimeoutMs = verifyTxnTimeoutMs;
   }
 
   public async stakeAptos(amount: bigint): Promise<types.TxnResponse> {

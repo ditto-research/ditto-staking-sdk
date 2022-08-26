@@ -10,10 +10,10 @@ Smart contract address = `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d83
 
 ```ts
 import \* as aptos from "aptos";
-import { Ditto, DittoUser, types, utils, wallet, payload } from "@ditto/sdk";
+import { DittoClient, DittoUser, types, utils, wallet, payload } from "@ditto/sdk";
 
-// Load the Ditto object singleton, needed to do all operations with the SDK
-await Ditto.load(
+// Load the DittoClient object singleton, needed to do all operations with the SDK
+await DittoClient.load(
 types.Network.DEVNET,
 "https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
 new aptos.HexString(SMART_CONTRACT_ADDRESS),
@@ -22,26 +22,26 @@ new wallet.DummyWallet() // Wallet object
 );
 
 // This will refresh the smart contract's resources with up-to-date on chain data
-await Ditto.refreshDittoResources();
+await DittoClient.refreshDittoResources();
 
 // You can check Ditto's smart contract resources via the Ditto object
-console.log(Ditto.DittoConfig);
-console.log(Ditto.DittoPool);
-console.log(Ditto.ValidatorWhitelist);
+console.log(DittoClient.dittoConfig);
+console.log(DittoClient.dittoPool);
+console.log(DittoClient.validatorWhitelist);
 
-// There are several permissionless entry-points that can be called via the Ditto singleton
-await Ditto.distributeUnstakedCoins(); // Distribute pending stake to validators
-await Ditto.updateDittoState(); // Update Ditto's smart contract state on new epochs
-await Ditto.joinValidatorSet(validatorPoolAddress); // Reactivate inactive validators
+// There are several permissionless entry-points that can be called via the DittoClient singleton
+await DittoClient.distributeUnstakedCoins(); // Distribute pending stake to validators
+await DittoClient.updateDittoState(); // Update Ditto's smart contract state on new epochs
+await DittoClient.joinValidatorSet(validatorPoolAddress); // Reactivate inactive validators
 
-// You can query on chain state from Ditto as well- some examples
+// You can query on chain state from DittoClient as well- some examples
 // This will get validator state for a certain validator
-let validatorState = await Ditto.getValidatorStateFromTable(VALIDATOR_KEY);
+let validatorState = await DittoClient.getValidatorStateFromTable(VALIDATOR_KEY);
 
 // This will get how much aptos users can claim from their delayed unstake requests
-let userClaimState = await Ditto.getUserClaimStateFromTable(USER_KEY);
+let userClaimState = await DittoClient.getUserClaimStateFromTable(USER_KEY);
 
-// For the rest of Ditto functionality you can look at ditto.ts
+// For the rest of DittoClient functionality you can look at ditto-client.ts
 // This inclues more available entry-points and on chain state queries
 ```
 

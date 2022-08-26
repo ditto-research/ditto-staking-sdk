@@ -1,5 +1,3 @@
-import { ditto as Ditto } from "./ditto";
-
 export enum Network {
   LOCALNET = "localnet",
   DEVNET = "devnet",
