@@ -8,81 +8,81 @@
 
 # How to use it
 
-### Basic functionality
+## Basic functionality
+
+### Loading ditto state
 
 ```ts
-import \* as aptos from "aptos";
+import * as aptos from "aptos";
 import { Ditto, DittoClient, types, utils, wallet, payload } from "@ditto-research/staking-sdk";
 
 // Load the Ditto object singleton, needed to do all operations with the SDK
 await Ditto.load(
-new wallet.DummyWallet(), // Wallet object
-types.Network.DEVNET,
-"https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
-new aptos.HexString(SMART_CONTRACT_ADDRESS),
-5000, // Txn confirmation timeout - unused for now
+    new wallet.DummyWallet(), // Wallet object
+    types.Network.DEVNET,
+    "https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
+    new aptos.HexString(SMART_CONTRACT_ADDRESS),
+    5000, // Txn confirmation timeout - unused for now
 );
-
-// This will refresh the smart contract's resources with up-to-date on chain data
-await Ditto.refreshDittoResources();
-
-// You can check Ditto's smart contract resources via the Ditto object
-console.log(Ditto.dittoConfig);
-console.log(Ditto.dittoPool);
-console.log(Ditto.validatorWhitelist);
-
-// There are several permissionless entry-points that can be called via the Ditto singleton
-await Ditto.distributeUnstakedCoins(); // Distribute pending stake to validators
-await Ditto.updateDittoState(); // Update Ditto's smart contract state on new epochs
-await Ditto.joinValidatorSet(validatorPoolAddress); // Reactivate inactive validators
-
-// You can query on chain state from Ditto as well- some examples
-// This will get validator state for a certain validator
-let validatorState = await Ditto.getValidatorStateFromTable(VALIDATOR_KEY);
-
-// This will get how much aptos users can claim from their delayed unstake requests
-let userClaimState = await Ditto.getUserClaimStateFromTable(USER_KEY);
-
-// For the rest of Ditto functionality you can look at ditto-client.ts
-// This inclues more available entry-points and on chain state queries
 ```
 
-### Creating a ditto user
-
+### Create a local node wallet
 ```ts
-// Parameters for your aptos transactions
+// Parameters for your aptos transactions.
 const DEFAULT_TXN_CONFIG: types.AptosTxnConfig = {
   maxGasAmount: 1000n,
   gasUnitPrice: 1n,
   txnExpirationOffset: 10n,
 };
 
-// Create a Ditto user wallet
-let dittoUserWallet: wallet.DittoWallet = new wallet.DittoWallet(
+let wallet: wallet.DittoWallet = new wallet.DittoWallet(
   new aptos.HexString(USER_PRIVATE_KEY),
   DEFAULT_TXN_CONFIG
 );
+```
 
-let dittoUser = new DittoClient(dittoUserWallet, types.Network.DEVNET, 5000);
+### Using a wallet adapter
+
+The SDK's DittoClient constructor just expects a wallet that implements this interface.
+
+```ts
+// All objects that implement this interface (including wallet adapter).
+export interface Wallet {
+  account: AccountKeys;
+  signAndSubmitTransaction(transaction: any): Promise<any>;
+  signTransaction(transaction: any): Promise<any>;
+}
+```
+
+### Creating a ditto client
+
+```ts
+// Any wallet object implementing the interface can be passed in.
+let client = new DittoClient(dittoUserWallet, types.Network.DEVNET, 5000);
 
 // Example of how to stake aptos:
-let stakeAptosTxnResponse = await dittoUser.stakeAptos(STAKE_AMOUNT);
+let txResponse = await dittoUser.stakeAptos(STAKE_AMOUNT);
 
 // This will return an object of type -
 // interface TxnResponse {
-// hash: string; // The txn hash
-// msg: string; // Whether the transaction was successful
+//  hash: string; // The txn hash
+//  msg: string; // Whether the transaction was successful
 // }
+
 console.log(`Stake aptos txn reponse =`, stakeAptosTxnResponse);
 
-// Example of how to instant unstake aptos:
-await dittoUser.instantUnstake(InstantUnstakeAmount);
+// How to instant unstake stAPT (subject to instant unstake fee).
+await client.instantUnstake(<amount>);
 
-// Example of how to delayed unstake aptos:
-await dittoUser.delayedUnstake(DelayedUnstakeAmount);
+// *** Note delayed unstake and claim functionality is not available on devnet ***.
+// How to delayed unstake stAPT.
+await client.delayedUnstake(<amount>);
 
-// Example of how to claim aptos from delayed unstakes:
-await dittoUser.claimAptos();
+// View user delayed unstake state.
+let userClaimState = await Ditto.getUserClaimStateFromTable(client.address);
+
+// How to claim processed delayed unstake tickets.
+await client.claimAptos();
 
 // For the rest of the dittoUser functionality you can look at ditto-user.ts
 ```
@@ -118,4 +118,39 @@ let stAptosBalance = await getAccountStAptosBalance(ACCOUNT_ADDR);
 let stAptosCoinInfo = await getStAptosInfo();
 
 // For the rest of the utility functionality you can look at utils.ts
+```
+
+### Extra state fetching
+```ts
+// This will refresh the smart contract's resources with up-to-date on chain data.
+// This is called on load as well.
+await Ditto.refreshDittoResources();
+
+// You can check Ditto's smart contract resources via the Ditto object
+console.log(Ditto.dittoConfig);
+console.log(Ditto.dittoPool);
+console.log(Ditto.validatorWhitelist);
+
+// You can query on chain state from Ditto as well- some examples
+// This will get validator state for a certain validator
+let validatorState = await Ditto.getValidatorStateFromTable(VALIDATOR_KEY);
+
+// This will get how much aptos users can claim from their delayed unstake requests
+let userClaimState = await Ditto.getUserClaimStateFromTable(USER_KEY);
+
+// For the rest of Ditto functionality you can look at client.ts
+// This includes more available entry-points and on chain state queries
+```
+
+### Permissionless cranking
+There are several permissionless entry-points that can be called via the Ditto singleton.
+```ts
+// Distribute pending stake to validators.
+await Ditto.distributeUnstakedCoins();
+
+// Update Ditto's smart contract state on new epochs.
+await Ditto.updateDittoState();
+
+// Reactive inactive validator.
+await Ditto.joinValidatorSet(validatorPoolAddress);
 ```

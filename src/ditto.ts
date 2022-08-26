@@ -1,10 +1,9 @@
-import { AptosClient, HexString } from "aptos";
+import { AptosClient, HexString, Types } from "aptos";
 import * as types from "./types";
 import * as programTypes from "./program-types";
 import * as payload from "./payload";
 import * as utils from "./utils";
 import { Wallet, DummyWallet } from "./wallet";
-import { TableItemRequest } from "aptos/dist/generated";
 
 export class Ditto {
   public get isInitialized(): boolean {
@@ -236,7 +235,7 @@ export class Ditto {
   public async getValidatorStateFromTable(
     validatorKey: HexString
   ): Promise<programTypes.ValidatorState> {
-    let tableItemReq: TableItemRequest = {
+    let tableItemReq: Types.TableItemRequest = {
       key_type: "address",
       value_type: `${this._contractAddress.toString()}::${
         types.DittoModule.staking
@@ -261,7 +260,7 @@ export class Ditto {
   public async getDelayedUnstakeTicketsFromTable(
     validatorKey: HexString
   ): Promise<programTypes.DelayedUnstakeTicket[]> {
-    let tableItemReq: TableItemRequest = {
+    let tableItemReq: Types.TableItemRequest = {
       key_type: "address",
       value_type: `vector<${this._contractAddress.toString()}::${
         types.DittoModule.staking
@@ -288,7 +287,7 @@ export class Ditto {
   public async getUserClaimStateFromTable(
     userKey: HexString
   ): Promise<programTypes.UserClaimState> {
-    let tableItemReq: TableItemRequest = {
+    let tableItemReq: Types.TableItemRequest = {
       key_type: "address",
       value_type: `${this._contractAddress.toString()}::${
         types.DittoModule.staking
@@ -310,7 +309,7 @@ export class Ditto {
   public async getValidatorWhitelistFromTable(
     validatorKey: HexString
   ): Promise<boolean> {
-    let tableItemReq: TableItemRequest = {
+    let tableItemReq: Types.TableItemRequest = {
       key_type: "address",
       value_type: "bool",
       key: validatorKey.toString(),
