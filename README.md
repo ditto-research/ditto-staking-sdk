@@ -4,7 +4,7 @@
 
 | Network |                                Value                                 |
 | ------- | :------------------------------------------------------------------: |
-| Devnet  | `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d832c16a04da996` |
+| Devnet  | `0x6effdeb5d61295008a14f90db251d623ff3da749f82d7bc05b47838b1414362b` |
 
 # How to use it
 
@@ -14,7 +14,7 @@
 
 ```ts
 import * as aptos from "aptos";
-import { Ditto, DittoClient, types, utils, wallet, payload } from "@ditto-research/staking-sdk";
+import { Ditto, Client, types, utils, wallet, payload } from "@ditto-research/staking-sdk";
 
 // Load the Ditto object singleton, needed to do all operations with the SDK
 await Ditto.load(
@@ -58,18 +58,18 @@ export interface Wallet {
 
 ```ts
 // Any wallet object implementing the interface can be passed in.
-let client = new DittoClient(dittoUserWallet, types.Network.DEVNET, 5000);
+let client = new Client(wallet, types.Network.DEVNET, 5000);
 
 // Example of how to stake aptos:
-let txResponse = await dittoUser.stakeAptos(STAKE_AMOUNT);
+let txResponse = await client.stakeAptos(STAKE_AMOUNT);
 
-// This will return an object of type -
+// These functions will return an object of type -
 // interface TxnResponse {
 //  hash: string; // The txn hash
 //  msg: string; // Whether the transaction was successful
 // }
 
-console.log(`Stake aptos txn reponse =`, stakeAptosTxnResponse);
+console.log(`Stake aptos txn reponse =`, txResponse);
 
 // How to instant unstake stAPT (subject to instant unstake fee).
 await client.instantUnstake(<amount>);
@@ -84,7 +84,7 @@ let userClaimState = await Ditto.getUserClaimStateFromTable(client.address);
 // How to claim processed delayed unstake tickets.
 await client.claimAptos();
 
-// For the rest of the dittoUser functionality you can look at ditto-user.ts
+// For the rest of the client functionality you can look at `client.ts`
 ```
 
 ### Getting payloads
