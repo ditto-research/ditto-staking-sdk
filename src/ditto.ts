@@ -326,6 +326,12 @@ export class Ditto {
   public setVerifyTxnTimeoutMs(newValue: number) {
     this._verifyTxnTimeoutMs = newValue;
   }
+
+  public async staptosIndex(): Promise<number> {
+    let staptosInfo = await utils.getStaptosInfo();
+    if (staptosInfo == null) throw new Error("Fetch error!");
+    return Number(this.dittoPool.totalAptos) / Number(staptosInfo.supply);
+  }
 }
 
 // Ditto singleton.

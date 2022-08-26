@@ -102,11 +102,14 @@ let stakeAptosPayload = payload.stakeAptosPayload(STAKE_AMOUNT);
 Useful utility functions
 
 ```ts
+// Get staked aptos index.
+let index = await Ditto.staptosIndex();
+
 // Get aptos balance for an account
 let aptosBalance = await getAccountAptosBalance(ACCOUNT_ADDR);
 
 // Get staked aptos balance for an account
-let stAptosBalance = await getAccountStAptosBalance(ACCOUNT_ADDR);
+let stAptosBalance = await getAccountStaptosBalance(ACCOUNT_ADDR);
 
 // Get staked aptos coin info: returns CoinInfo
 // interface CoinInfo {
