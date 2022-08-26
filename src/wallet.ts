@@ -1,4 +1,4 @@
-import { dittoClient as DittoClient } from "./ditto-client";
+import { ditto as Ditto } from "./ditto";
 import {
   HexEncodedBytes,
   TransactionPayload,
@@ -74,7 +74,7 @@ export class DittoWallet implements Wallet {
     transaction: TransactionPayload
   ): Promise<{ hash: string }> {
     const signedTransaction = await this.signTransaction(transaction);
-    const response = await DittoClient.aptosClient.submitTransaction(
+    const response = await Ditto.aptosClient.submitTransaction(
       signedTransaction
     );
     return response;
@@ -84,7 +84,7 @@ export class DittoWallet implements Wallet {
     transaction: TransactionPayload
   ): Promise<SubmitTransactionRequest> {
     const address = this._aptosAccount.address();
-    const txn = await DittoClient.aptosClient.generateTransaction(
+    const txn = await Ditto.aptosClient.generateTransaction(
       address,
       transaction as TransactionPayload
       // {
@@ -96,9 +96,6 @@ export class DittoWallet implements Wallet {
       //   ).toString(),
       // }
     );
-    return await DittoClient.aptosClient.signTransaction(
-      this._aptosAccount,
-      txn
-    );
+    return await Ditto.aptosClient.signTransaction(this._aptosAccount, txn);
   }
 }
