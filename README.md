@@ -1,15 +1,17 @@
-# ditto-staking-sdk
+# SDK
 
-# Program ID
+# Smart contract address
 
-Smart contract address = `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d832c16a04da996`
+| Network     |                    Value                     |
+| ----------- | :------------------------------------------: |
+| Devnet      | `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d832c16a04da996` |
 
 # How to use it
 
 ### Basic functionality
 
 ```ts
-import \* as aptos from "aptos";
+import * as aptos from "aptos";
 import { DittoClient, DittoUser, types, utils, wallet, payload } from "@ditto-research/staking-sdk";
 
 // Load the DittoClient object singleton, needed to do all operations with the SDK
