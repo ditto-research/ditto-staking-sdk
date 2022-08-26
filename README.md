@@ -10,7 +10,7 @@ Smart contract address = `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d83
 
 ```ts
 import \* as aptos from "aptos";
-import { DittoClient, DittoUser, types, utils, wallet, payload } from "@ditto/sdk";
+import { DittoClient, DittoUser, types, utils, wallet, payload } from "@ditto/staking-sdk";
 
 // Load the DittoClient object singleton, needed to do all operations with the SDK
 await DittoClient.load(

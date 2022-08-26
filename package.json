@@ -1,5 +1,5 @@
 {
-  "name": "@ditto/sdk",
+  "name": "@ditto/staking-sdk",
   "version": "0.1.0",
   "description": "Ditto SDK",
   "main": "dist/index.js",
