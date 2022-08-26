@@ -1,8 +1,10 @@
-# ditto-staking-sdk
+# SDK
 
-# Program ID
+# Smart contract address
 
-Smart contract address = `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d832c16a04da996`
+| Network |                                Value                                 |
+| ------- | :------------------------------------------------------------------: |
+| Devnet  | `0x31f90de455c87470b5beb98e219979c472e8b11c680140883d832c16a04da996` |
 
 # How to use it
 
@@ -14,11 +16,11 @@ import { Ditto, DittoClient, types, utils, wallet, payload } from "@ditto-resear
 
 // Load the Ditto object singleton, needed to do all operations with the SDK
 await Ditto.load(
+new wallet.DummyWallet(), // Wallet object
 types.Network.DEVNET,
 "https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
 new aptos.HexString(SMART_CONTRACT_ADDRESS),
 5000, // Txn confirmation timeout - unused for now
-new wallet.DummyWallet() // Wallet object
 );
 
 // This will refresh the smart contract's resources with up-to-date on chain data
@@ -60,6 +62,8 @@ let dittoUserWallet: wallet.DittoWallet = new wallet.DittoWallet(
   new aptos.HexString(USER_PRIVATE_KEY),
   DEFAULT_TXN_CONFIG
 );
+
+let dittoUser = new DittoClient(dittoUserWallet, types.Network.DEVNET, 5000);
 
 // Example of how to stake aptos:
 let stakeAptosTxnResponse = await dittoUser.stakeAptos(STAKE_AMOUNT);
