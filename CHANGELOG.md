@@ -5,6 +5,10 @@ Version changes are pinned to SDK releases.
 
 ## [Unreleased]
 
+## [0.1.1]
+
+- Cleanup the README and refactor some functionality. ([#3](https://github.com/ditto-research/ditto-staking-sdk/pull/3))
+
 ## [0.1.0]
 
 - Initial version of the Ditto Staking SDK.

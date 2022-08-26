@@ -10,6 +10,7 @@ import * as types from "./types";
 export type PublicKey = MaybeHexString;
 export type Address = MaybeHexString;
 export type AuthKey = MaybeHexString;
+
 export interface AccountKeys {
   publicKey: PublicKey | null;
   address: Address | null;
@@ -56,13 +57,16 @@ export class DittoWallet implements Wallet {
   }
   private _account: AccountKeys;
 
+  public get address(): Address {
+    return this.account.address;
+  }
+
   public constructor(
     signerPrivateKey: HexString,
     aptosTxnConfig: types.AptosTxnConfig
   ) {
     this._aptosAccount = new AptosAccount(signerPrivateKey.toBuffer());
     this._aptosTxnConfig = aptosTxnConfig;
-
     this._account = {
       publicKey: this._aptosAccount.pubKey(),
       address: this._aptosAccount.address(),

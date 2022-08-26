@@ -1,9 +1,9 @@
 import * as types from "./types";
-import { Wallet } from "./wallet";
+import { Wallet, Address } from "./wallet";
 import * as payload from "./payload";
 import * as utils from "./utils";
 
-export class DittoClient {
+export class Client {
   public get network(): types.Network {
     return this._network;
   }
@@ -13,6 +13,10 @@ export class DittoClient {
     return this._wallet;
   }
   private _wallet: Wallet;
+
+  public get address(): Address {
+    return this.wallet.account.address;
+  }
 
   public get verifyTxnTimeoutMs(): number {
     return this._verifyTxnTimeoutMs;

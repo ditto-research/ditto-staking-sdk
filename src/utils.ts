@@ -45,7 +45,7 @@ export async function getAccountAptosBalance(
   return parseInt((resource.data as any)["coin"]["value"]);
 }
 
-export async function getAccountStAptosBalance(
+export async function getAccountStaptosBalance(
   accountAddr: MaybeHexString
 ): Promise<number | null> {
   const resource = await Ditto.aptosClient.getAccountResource(
@@ -59,7 +59,7 @@ export async function getAccountStAptosBalance(
   return parseInt((resource.data as any)["coin"]["value"]);
 }
 
-export async function getStAptosInfo(): Promise<programTypes.CoinInfo> {
+export async function getStaptosInfo(): Promise<programTypes.CoinInfo> {
   const resource = (await Ditto.aptosClient.getAccountResource(
     Ditto.contractAddress.toString(),
     `0x1::coin::CoinInfo<${Ditto.contractAddress}::staked_coin::StakedAptos>`
