@@ -1,9 +1,5 @@
 import { ditto as Ditto } from "./ditto";
-import {
-  HexEncodedBytes,
-  SubmitTransactionRequest,
-  TransactionPayload,
-} from "aptos/dist/generated";
+import { HexEncodedBytes, EntryFunctionPayload } from "aptos/dist/generated";
 import { AptosAccount, HexString, MaybeHexString } from "aptos";
 import * as types from "./types";
 
@@ -19,9 +15,9 @@ export interface AccountKeys {
 export interface Wallet {
   account: AccountKeys;
   signAndSubmitTransaction(
-    transaction: TransactionPayload
+    transaction: any
   ): Promise<{ hash: HexEncodedBytes }>;
-  signTransaction(transaction: any): Promise<SubmitTransactionRequest>;
+  signTransaction(transaction: any): Promise<Uint8Array>;
 }
 
 export class DummyWallet implements Wallet {
@@ -30,14 +26,14 @@ export class DummyWallet implements Wallet {
   account: AccountKeys = null;
 
   async signAndSubmitTransaction(
-    _transaction: TransactionPayload
+    _transaction: EntryFunctionPayload
   ): Promise<{ hash: string }> {
     throw Error("Not supported by dummy wallet!");
   }
 
   async signTransaction(
-    _transaction: TransactionPayload
-  ): Promise<SubmitTransactionRequest> {
+    _transaction: EntryFunctionPayload
+  ): Promise<Uint8Array> {
     throw Error("Not supported by dummy wallet!");
   }
 }
@@ -73,7 +69,7 @@ export class DittoWallet implements Wallet {
   }
 
   public async signAndSubmitTransaction(
-    transaction: TransactionPayload
+    transaction: EntryFunctionPayload
   ): Promise<{ hash: string }> {
     const signedTransaction = await this.signTransaction(transaction);
     const response = await Ditto.aptosClient.submitTransaction(
@@ -83,12 +79,12 @@ export class DittoWallet implements Wallet {
   }
 
   public async signTransaction(
-    transaction: TransactionPayload
-  ): Promise<SubmitTransactionRequest> {
+    transaction: EntryFunctionPayload
+  ): Promise<Uint8Array> {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(
       address,
-      transaction as TransactionPayload,
+      transaction as EntryFunctionPayload,
       {
         max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
         gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
