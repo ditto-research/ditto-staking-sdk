@@ -1,13 +1,13 @@
 import { dittoClient as DittoClient } from "./ditto-client";
 import { MaybeHexString, FaucetClient, HexString } from "aptos";
-import { Transaction, EntryFunctionPayload } from "aptos/dist/generated";
+import { Transaction, TransactionPayload } from "aptos/dist/generated";
 import { Wallet } from "./wallet";
 import * as types from "./types";
 import * as programTypes from "./program-types";
 
 export async function processTxn(
   wallet: Wallet,
-  payload: EntryFunctionPayload,
+  payload: TransactionPayload,
   _timeoutMs: number = 5000
 ): Promise<types.TxnResponse> {
   let txnHash: { hash: string } = await wallet.signAndSubmitTransaction(

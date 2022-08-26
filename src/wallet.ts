@@ -1,5 +1,9 @@
 import { dittoClient as DittoClient } from "./ditto-client";
-import { HexEncodedBytes, EntryFunctionPayload } from "aptos/dist/generated";
+import {
+  HexEncodedBytes,
+  TransactionPayload,
+  SubmitTransactionRequest,
+} from "aptos/dist/generated";
 import { AptosAccount, HexString, MaybeHexString } from "aptos";
 import * as types from "./types";
 
@@ -14,10 +18,8 @@ export interface AccountKeys {
 
 export interface Wallet {
   account: AccountKeys;
-  signAndSubmitTransaction(
-    transaction: any
-  ): Promise<{ hash: HexEncodedBytes }>;
-  signTransaction(transaction: any): Promise<Uint8Array>;
+  signAndSubmitTransaction(transaction: any): Promise<any>;
+  signTransaction(transaction: any): Promise<any>;
 }
 
 export class DummyWallet implements Wallet {
@@ -26,14 +28,14 @@ export class DummyWallet implements Wallet {
   account: AccountKeys = null;
 
   async signAndSubmitTransaction(
-    _transaction: EntryFunctionPayload
+    _transaction: TransactionPayload
   ): Promise<{ hash: string }> {
     throw Error("Not supported by dummy wallet!");
   }
 
   async signTransaction(
-    _transaction: EntryFunctionPayload
-  ): Promise<Uint8Array> {
+    _transaction: TransactionPayload
+  ): Promise<SubmitTransactionRequest> {
     throw Error("Not supported by dummy wallet!");
   }
 }
@@ -69,7 +71,7 @@ export class DittoWallet implements Wallet {
   }
 
   public async signAndSubmitTransaction(
-    transaction: EntryFunctionPayload
+    transaction: TransactionPayload
   ): Promise<{ hash: string }> {
     const signedTransaction = await this.signTransaction(transaction);
     const response = await DittoClient.aptosClient.submitTransaction(
@@ -79,20 +81,20 @@ export class DittoWallet implements Wallet {
   }
 
   public async signTransaction(
-    transaction: EntryFunctionPayload
-  ): Promise<Uint8Array> {
+    transaction: TransactionPayload
+  ): Promise<SubmitTransactionRequest> {
     const address = this._aptosAccount.address();
     const txn = await DittoClient.aptosClient.generateTransaction(
       address,
-      transaction as EntryFunctionPayload,
-      {
-        max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
-        gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
-        expiration_timestamp_secs: (
-          BigInt(Math.floor(Date.now() / 1000)) +
-          this._aptosTxnConfig.txnExpirationOffset
-        ).toString(),
-      }
+      transaction as TransactionPayload
+      // {
+      //   max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
+      //   gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
+      //   expiration_timestamp_secs: (
+      //     BigInt(Math.floor(Date.now() / 1000)) +
+      //     this._aptosTxnConfig.txnExpirationOffset
+      //   ).toString(),
+      // }
     );
     return await DittoClient.aptosClient.signTransaction(
       this._aptosAccount,
