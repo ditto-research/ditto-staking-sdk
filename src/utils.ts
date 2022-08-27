@@ -82,7 +82,22 @@ export async function fundAccount(
   aptosAccount: MaybeHexString,
   amount: number = 1000000
 ): Promise<string[]> {
-  return await faucetClient.fundAccount(aptosAccount, amount);
+  const tnxHashes = await faucetClient.faucetRequester.request<Array<string>>({
+    method: "POST",
+    url: "mint",
+    query: {
+      address: HexString.ensure(aptosAccount).noPrefix(),
+      amount,
+    },
+  });
+
+  const promises: Promise<void>[] = [];
+  for (let i = 0; i < tnxHashes.length; i += 1) {
+    const tnxHash = tnxHashes[i];
+    promises.push(faucetClient.waitForTransaction(tnxHash));
+  }
+  await Promise.all(promises);
+  return tnxHashes;
 }
 
 export async function getStakePoolResource(
