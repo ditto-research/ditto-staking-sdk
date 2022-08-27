@@ -90,15 +90,15 @@ export class DittoWallet implements Wallet {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(
       address,
-      transaction as TransactionPayload
-      // {
-      //   max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
-      //   gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
-      //   expiration_timestamp_secs: (
-      //     BigInt(Math.floor(Date.now() / 1000)) +
-      //     this._aptosTxnConfig.txnExpirationOffset
-      //   ).toString(),
-      // }
+      transaction as TransactionPayload,
+      {
+        max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
+        gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
+        expiration_timestamp_secs: (
+          BigInt(Math.floor(Date.now() / 1000)) +
+          this._aptosTxnConfig.txnExpirationOffset
+        ).toString(),
+      }
     );
     return await Ditto.aptosClient.signTransaction(this._aptosAccount, txn);
   }
