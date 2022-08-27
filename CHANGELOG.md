@@ -5,6 +5,8 @@ Version changes are pinned to SDK releases.
 
 ## [Unreleased]
 
+- Update utils fundAccount(). ([#6](https://github.com/ditto-research/ditto-staking-sdk/pull/6))
+
 ## [0.1.3]
 
 - Update signTransaction and use aptos 1.3.7. ([#5](https://github.com/ditto-research/ditto-staking-sdk/pull/5))
