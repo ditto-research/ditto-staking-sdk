@@ -64,6 +64,7 @@ export async function getStaptosInfo(): Promise<programTypes.CoinInfo> {
     Ditto.contractAddress.toString(),
     `0x1::coin::CoinInfo<${Ditto.contractAddress}::staked_coin::StakedAptos>`
   )) as any;
+
   if (resource == null) {
     return null;
   }
@@ -71,7 +72,7 @@ export async function getStaptosInfo(): Promise<programTypes.CoinInfo> {
   return {
     decimals: resource.data.decimals,
     name: resource.data.name,
-    supply: BigInt(resource.data.supply.vec[0]),
+    supply: BigInt(resource.data.supply.vec[0].integer.vec[0].value),
     symbol: resource.data.symbol,
   };
 }
