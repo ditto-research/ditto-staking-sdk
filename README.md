@@ -14,19 +14,27 @@
 
 ```ts
 import * as aptos from "aptos";
-import { Ditto, Client, types, utils, wallet, payload } from "@ditto-research/staking-sdk";
+import {
+  Ditto,
+  Client,
+  types,
+  utils,
+  wallet,
+  payload,
+} from "@ditto-research/staking-sdk";
 
 // Load the Ditto object singleton, needed to do all operations with the SDK
 await Ditto.load(
-    new wallet.DummyWallet(), // Wallet object
-    types.Network.DEVNET,
-    "https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
-    new aptos.HexString(SMART_CONTRACT_ADDRESS),
-    5000, // Txn confirmation timeout - unused for now
+  new wallet.DummyWallet(), // Wallet object
+  types.Network.DEVNET,
+  "https://fullnode.devnet.aptoslabs.com/v1", // REST url endpoint
+  new aptos.HexString(SMART_CONTRACT_ADDRESS),
+  5000 // Txn confirmation timeout - unused for now
 );
 ```
 
 ### Create a local node wallet
+
 ```ts
 // Parameters for your aptos transactions.
 const DEFAULT_TXN_CONFIG: types.AptosTxnConfig = {
@@ -43,7 +51,7 @@ let wallet: wallet.DittoWallet = new wallet.DittoWallet(
 
 ### Using a wallet adapter
 
-The SDK's DittoClient constructor just expects a wallet that implements this interface.
+The SDK's Client constructor just expects a wallet that implements this interface.
 
 ```ts
 // All objects that implement this interface (including wallet adapter).
@@ -124,6 +132,7 @@ let stAptosCoinInfo = await getStAptosInfo();
 ```
 
 ### Extra state fetching
+
 ```ts
 // This will refresh the smart contract's resources with up-to-date on chain data.
 // This is called on load as well.
@@ -146,7 +155,9 @@ let userClaimState = await Ditto.getUserClaimStateFromTable(USER_KEY);
 ```
 
 ### Permissionless cranking
+
 There are several permissionless entry-points that can be called via the Ditto singleton.
+
 ```ts
 // Distribute pending stake to validators.
 await Ditto.distributeUnstakedCoins();
