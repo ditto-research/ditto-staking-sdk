@@ -19,8 +19,8 @@ export interface AccountKeys {
 
 export interface Wallet {
   account: AccountKeys;
-  signAndSubmitTransaction(transaction: any): Promise<any>;
-  signTransaction(transaction: any): Promise<any>;
+  signAndSubmit(transaction: any, otherOptions: any): Promise<any>;
+  signTransaction(transaction: any, otherOptions: any): Promise<any>;
 }
 
 export class DummyWallet implements Wallet {
@@ -28,14 +28,16 @@ export class DummyWallet implements Wallet {
 
   account: AccountKeys = null;
 
-  async signAndSubmitTransaction(
-    _transaction: TransactionPayload
+  async signAndSubmit(
+    _transaction: any,
+    _otherOptions: any
   ): Promise<{ hash: string }> {
     throw Error("Not supported by dummy wallet!");
   }
 
   async signTransaction(
-    _transaction: TransactionPayload
+    _transaction: any,
+    _otherOptions: any
   ): Promise<SubmitTransactionRequest> {
     throw Error("Not supported by dummy wallet!");
   }
@@ -74,10 +76,11 @@ export class DittoWallet implements Wallet {
     };
   }
 
-  public async signAndSubmitTransaction(
-    transaction: TransactionPayload
+  public async signAndSubmit(
+    transaction: TransactionPayload,
+    _otherOptions: any
   ): Promise<{ hash: string }> {
-    const signedTransaction = await this.signTransaction(transaction);
+    const signedTransaction = await this.signTransaction(transaction, null);
     const response = await Ditto.aptosClient.submitTransaction(
       signedTransaction
     );
@@ -85,7 +88,8 @@ export class DittoWallet implements Wallet {
   }
 
   public async signTransaction(
-    transaction: TransactionPayload
+    transaction: TransactionPayload,
+    _otherOptions: any
   ): Promise<SubmitTransactionRequest> {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(

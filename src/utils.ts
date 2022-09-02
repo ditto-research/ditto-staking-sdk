@@ -10,8 +10,16 @@ export async function processTxn(
   payload: TransactionPayload,
   _timeoutMs: number = 5000
 ): Promise<types.TxnResponse> {
-  let txnHash: { hash: string } = await wallet.signAndSubmitTransaction(
-    payload
+  const otherOptions = {
+    max_gas_amount: "1000",
+    gas_unit_price: "1",
+    expiration_timestamp_secs: "1646793600",
+    sequence_number: "10",
+  };
+
+  let txnHash: { hash: string } = await wallet.signAndSubmit(
+    payload,
+    otherOptions
   );
   await Ditto.aptosClient.waitForTransaction(txnHash.hash);
   let txnInfo: Transaction;
