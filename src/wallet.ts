@@ -1,9 +1,11 @@
 import { ditto as Ditto } from "./ditto";
+import { EntryFunctionPayload } from "aptos/dist/generated";
 import {
-  SubmitTransactionRequest,
-  EntryFunctionPayload,
-} from "aptos/dist/generated";
-import { AptosAccount, HexString, MaybeHexString } from "aptos";
+  AptosAccount,
+  HexString,
+  MaybeHexString,
+  TxnBuilderTypes,
+} from "aptos";
 import * as types from "./types";
 
 export type PublicKey = MaybeHexString;
@@ -18,8 +20,9 @@ export interface AccountKeys {
 
 export interface Wallet {
   account: AccountKeys;
-  signAndSubmit(transaction: any, otherOptions: any): Promise<any>;
-  signTransaction(transaction: any, otherOptions: any): Promise<any>;
+  generateTransaction(transaction: any): Promise<any>;
+  signAndSubmitTransaction(transaction: any): Promise<any>;
+  signTransaction(transaction: any): Promise<any>;
 }
 
 export class DummyWallet implements Wallet {
@@ -27,17 +30,14 @@ export class DummyWallet implements Wallet {
 
   account: AccountKeys = null;
 
-  async signAndSubmit(
-    _transaction: any,
-    _otherOptions: any
-  ): Promise<{ hash: string }> {
+  async generateTransaction(_transaction: any): Promise<any> {
+    throw Error("Not supported by dummy wallet!");
+  }
+  async signAndSubmitTransaction(_transaction: any): Promise<any> {
     throw Error("Not supported by dummy wallet!");
   }
 
-  async signTransaction(
-    _transaction: any,
-    _otherOptions: any
-  ): Promise<SubmitTransactionRequest> {
+  async signTransaction(_transaction: any): Promise<any> {
     throw Error("Not supported by dummy wallet!");
   }
 }
@@ -75,20 +75,38 @@ export class DittoWallet implements Wallet {
     };
   }
 
-  public async signAndSubmit(
-    transaction: EntryFunctionPayload,
-    _otherOptions: any
+  public async generateTransaction(
+    transaction: EntryFunctionPayload
+  ): Promise<{ data: TxnBuilderTypes.RawTransaction }> {
+    const address = this._aptosAccount.address();
+    const txn = {
+      data: await Ditto.aptosClient.generateTransaction(address, transaction, {
+        max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
+        gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
+        expiration_timestamp_secs: (
+          BigInt(Math.floor(Date.now() / 1000)) +
+          this._aptosTxnConfig.txnExpirationOffset
+        ).toString(),
+      }),
+    };
+    return txn;
+  }
+
+  public async signAndSubmitTransaction(
+    transaction: TxnBuilderTypes.RawTransaction
   ): Promise<{ hash: string }> {
-    const signedTransaction = await this.signTransaction(transaction, null);
-    const response = await Ditto.aptosClient.submitTransaction(
-      signedTransaction
+    const signedRawTransaction = await Ditto.aptosClient.signTransaction(
+      this._aptosAccount,
+      transaction
     );
-    return response;
+    const response = await Ditto.aptosClient.submitTransaction(
+      signedRawTransaction
+    );
+    return (response as any).hash;
   }
 
   public async signTransaction(
-    transaction: EntryFunctionPayload,
-    _otherOptions: any
+    transaction: EntryFunctionPayload
   ): Promise<Uint8Array> {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(
