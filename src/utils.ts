@@ -1,13 +1,13 @@
 import { ditto as Ditto } from "./ditto";
 import { MaybeHexString, FaucetClient, HexString } from "aptos";
-import { Transaction, TransactionPayload } from "aptos/dist/generated";
+import { EntryFunctionPayload, Transaction } from "aptos/dist/generated";
 import { Wallet } from "./wallet";
 import * as types from "./types";
 import * as programTypes from "./program-types";
 
 export async function processTxn(
   wallet: Wallet,
-  payload: TransactionPayload,
+  payload: EntryFunctionPayload,
   _timeoutMs: number = 5000
 ): Promise<types.TxnResponse> {
   const otherOptions = {

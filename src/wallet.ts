@@ -1,8 +1,7 @@
 import { ditto as Ditto } from "./ditto";
 import {
-  HexEncodedBytes,
-  TransactionPayload,
   SubmitTransactionRequest,
+  EntryFunctionPayload,
 } from "aptos/dist/generated";
 import { AptosAccount, HexString, MaybeHexString } from "aptos";
 import * as types from "./types";
@@ -77,7 +76,7 @@ export class DittoWallet implements Wallet {
   }
 
   public async signAndSubmit(
-    transaction: TransactionPayload,
+    transaction: EntryFunctionPayload,
     _otherOptions: any
   ): Promise<{ hash: string }> {
     const signedTransaction = await this.signTransaction(transaction, null);
@@ -88,13 +87,13 @@ export class DittoWallet implements Wallet {
   }
 
   public async signTransaction(
-    transaction: TransactionPayload,
+    transaction: EntryFunctionPayload,
     _otherOptions: any
-  ): Promise<SubmitTransactionRequest> {
+  ): Promise<Uint8Array> {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(
       address,
-      transaction as TransactionPayload,
+      transaction,
       {
         max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
         gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),

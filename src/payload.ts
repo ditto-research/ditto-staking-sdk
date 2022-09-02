@@ -1,64 +1,59 @@
 import { ditto as Ditto } from "./ditto";
-import { TransactionPayload } from "aptos/dist/generated";
+import { EntryFunctionPayload } from "aptos/dist/generated";
 import { HexString } from "aptos";
 import * as programTypes from "./program-types";
 import * as types from "./types";
 
 export function initializePayload(
   args: programTypes.DittoConfig
-): TransactionPayload {
+): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::initialize`,
     arguments: [
-      args.poolBufferPct.toString(),
-      args.rewardsFeePct.toString(),
-      args.protocolFeeSharePct.toString(),
-      args.instantUnstakeFeeBps.toString(),
+      args.poolBufferPct,
+      args.rewardsFeePct,
+      args.protocolFeeSharePct,
+      args.instantUnstakeFeeBps,
       args.requireValidatorWhitelist,
     ],
     type_arguments: [],
   };
 }
 
-export function stakeAptosPayload(amount: bigint): TransactionPayload {
+export function stakeAptosPayload(amount: bigint): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::stake_aptos`,
-    arguments: [amount.toString()],
+    arguments: [amount],
     type_arguments: [],
   };
 }
 
-export function instantUnstakePayload(amount: bigint): TransactionPayload {
+export function instantUnstakePayload(amount: bigint): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::instant_unstake`,
-    arguments: [amount.toString()],
+    arguments: [amount],
     type_arguments: [],
   };
 }
 
-export function delayedUnstakePayload(amount: bigint): TransactionPayload {
+export function delayedUnstakePayload(amount: bigint): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::delayed_unstake`,
-    arguments: [amount.toString()],
+    arguments: [amount],
     type_arguments: [],
   };
 }
 
-export function claimAptosPayload(): TransactionPayload {
+export function claimAptosPayload(): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::claim_aptos`,
@@ -67,9 +62,8 @@ export function claimAptosPayload(): TransactionPayload {
   };
 }
 
-export function addValidatorPayload(): TransactionPayload {
+export function addValidatorPayload(): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::add_validator`,
@@ -78,9 +72,8 @@ export function addValidatorPayload(): TransactionPayload {
   };
 }
 
-export function updateDittoStatePayload(): TransactionPayload {
+export function updateDittoStatePayload(): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::update_ditto_state`,
@@ -89,9 +82,8 @@ export function updateDittoStatePayload(): TransactionPayload {
   };
 }
 
-export function distributeUnstakedCoinsPayload(): TransactionPayload {
+export function distributeUnstakedCoinsPayload(): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::distribute_unstaked_coins`,
@@ -102,9 +94,8 @@ export function distributeUnstakedCoinsPayload(): TransactionPayload {
 
 export function whitelistValidatorPayload(
   validator: HexString
-): TransactionPayload {
+): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::whitelist_validator`,
@@ -115,9 +106,8 @@ export function whitelistValidatorPayload(
 
 export function joinValidatorSetPayload(
   poolAddress: HexString
-): TransactionPayload {
+): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::whitelist_validator`,
@@ -129,10 +119,9 @@ export function joinValidatorSetPayload(
 export function updateDittoConfigPayload(
   paramToUpdate: types.UpdateDittoConfigParam,
   newValue: bigint | boolean
-): TransactionPayload {
+): EntryFunctionPayload {
   let arg = typeof newValue === "bigint" ? newValue.toString() : newValue;
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.config
     }::${paramToUpdate}`,
@@ -141,9 +130,8 @@ export function updateDittoConfigPayload(
   };
 }
 
-export function registerStAptosPayload(): TransactionPayload {
+export function registerStAptosPayload(): EntryFunctionPayload {
   return {
-    type: "entry_function_payload",
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.coin
     }::register`,
