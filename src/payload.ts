@@ -27,7 +27,7 @@ export function stakeAptosPayload(amount: bigint): EntryFunctionPayload {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::stake_aptos`,
-    arguments: [amount],
+    arguments: [Number(amount)],
     type_arguments: [],
   };
 }
@@ -37,7 +37,7 @@ export function instantUnstakePayload(amount: bigint): EntryFunctionPayload {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::instant_unstake`,
-    arguments: [amount],
+    arguments: [Number(amount)],
     type_arguments: [],
   };
 }
@@ -47,7 +47,7 @@ export function delayedUnstakePayload(amount: bigint): EntryFunctionPayload {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
     }::delayed_unstake`,
-    arguments: [amount],
+    arguments: [Number(amount)],
     type_arguments: [],
   };
 }
@@ -120,7 +120,7 @@ export function updateDittoConfigPayload(
   paramToUpdate: types.UpdateDittoConfigParam,
   newValue: bigint | boolean
 ): EntryFunctionPayload {
-  let arg = typeof newValue === "bigint" ? newValue.toString() : newValue;
+  let arg = typeof newValue === "bigint" ? Number(newValue) : newValue;
   return {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.config
