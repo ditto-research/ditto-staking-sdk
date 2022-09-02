@@ -94,7 +94,7 @@ export class DittoWallet implements Wallet {
 
   public async signAndSubmitTransaction(
     transaction: TxnBuilderTypes.RawTransaction
-  ): Promise<{ hash: string }> {
+  ): Promise<{ data: string }> {
     const signedRawTransaction = await Ditto.aptosClient.signTransaction(
       this._aptosAccount,
       transaction
@@ -102,7 +102,7 @@ export class DittoWallet implements Wallet {
     const response = await Ditto.aptosClient.submitTransaction(
       signedRawTransaction
     );
-    return (response as any).hash;
+    return { data: (response as any).hash };
   }
 
   public async signTransaction(

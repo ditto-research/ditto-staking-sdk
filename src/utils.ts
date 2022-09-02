@@ -12,10 +12,10 @@ export async function processTxn(
 ): Promise<types.TxnResponse> {
   const txnRequest = await wallet.generateTransaction(payload);
   const txnHash = await wallet.signAndSubmitTransaction(txnRequest.data);
-  await Ditto.aptosClient.waitForTransaction(txnHash);
+  await Ditto.aptosClient.waitForTransaction(txnHash.data);
   let txnInfo: Transaction;
   try {
-    txnInfo = await Ditto.aptosClient.getTransactionByHash(txnHash);
+    txnInfo = await Ditto.aptosClient.getTransactionByHash(txnHash.data);
   } catch (e) {
     throw Error("Transaction hash can't be found.");
   }
@@ -25,7 +25,7 @@ export async function processTxn(
   }
 
   return {
-    hash: txnHash,
+    hash: txnHash.data,
     msg: (txnInfo as any).vm_status,
   };
 }
