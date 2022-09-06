@@ -11,10 +11,10 @@ export async function processTxn(
   _timeoutMs: number = 5000
 ): Promise<types.TxnResponse> {
   const txnHash = await wallet.signAndSubmitTransaction(payload);
-  await Ditto.aptosClient.waitForTransaction(txnHash);
+  await Ditto.aptosClient.waitForTransaction(txnHash.hash);
   let txnInfo: Transaction;
   try {
-    txnInfo = await Ditto.aptosClient.getTransactionByHash(txnHash);
+    txnInfo = await Ditto.aptosClient.getTransactionByHash(txnHash.hash);
   } catch (e) {
     throw Error("Transaction hash can't be found.");
   }
@@ -24,7 +24,7 @@ export async function processTxn(
   }
 
   return {
-    hash: txnHash,
+    hash: txnHash.hash,
     msg: (txnInfo as any).vm_status,
   };
 }

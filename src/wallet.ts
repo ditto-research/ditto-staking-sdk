@@ -98,7 +98,7 @@ export class DittoWallet implements Wallet {
     const response = await Ditto.aptosClient.submitTransaction(
       signedRawTransaction
     );
-    return response.hash;
+    return response;
   }
 
   public async signTransaction(
