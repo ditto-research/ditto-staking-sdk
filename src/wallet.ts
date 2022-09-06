@@ -1,5 +1,5 @@
 import { ditto as Ditto } from "./ditto";
-import { EntryFunctionPayload } from "aptos/dist/generated";
+import { EntryFunctionPayload, TransactionPayload } from "aptos/dist/generated";
 import {
   AptosAccount,
   HexString,
@@ -19,25 +19,24 @@ export interface AccountKeys {
 }
 
 export interface Wallet {
-  account: AccountKeys;
-  generateTransaction(transaction: any): Promise<any>;
-  signAndSubmitTransaction(transaction: any): Promise<any>;
-  signTransaction(transaction: any): Promise<any>;
+  publicAccount: AccountKeys;
+  signAndSubmitTransaction(transaction: any, options?: any): Promise<any>;
+  signTransaction(transaction: any, options?: any): Promise<any>;
 }
 
 export class DummyWallet implements Wallet {
   constructor() {}
 
-  account: AccountKeys = null;
+  publicAccount: AccountKeys = null;
 
-  async generateTransaction(_transaction: any): Promise<any> {
+  async signAndSubmitTransaction(
+    _transaction: any,
+    _options?: any
+  ): Promise<any> {
     throw Error("Not supported by dummy wallet!");
   }
-  async signAndSubmitTransaction(_transaction: any): Promise<any> {
-    throw Error("Not supported by dummy wallet!");
-  }
 
-  async signTransaction(_transaction: any): Promise<any> {
+  async signTransaction(_transaction: any, _options?: any): Promise<any> {
     throw Error("Not supported by dummy wallet!");
   }
 }
@@ -53,13 +52,13 @@ export class DittoWallet implements Wallet {
   }
   private _aptosTxnConfig: types.AptosTxnConfig;
 
-  public get account(): AccountKeys {
+  public get publicAccount(): AccountKeys {
     return this._account;
   }
   private _account: AccountKeys;
 
   public get address(): Address {
-    return this.account.address;
+    return this._account.address;
   }
 
   public constructor(
@@ -93,12 +92,9 @@ export class DittoWallet implements Wallet {
   }
 
   public async signAndSubmitTransaction(
-    transaction: TxnBuilderTypes.RawTransaction
+    transaction: EntryFunctionPayload
   ): Promise<{ data: string }> {
-    const signedRawTransaction = await Ditto.aptosClient.signTransaction(
-      this._aptosAccount,
-      transaction
-    );
+    const signedRawTransaction = await this.signTransaction(transaction);
     const response = await Ditto.aptosClient.submitTransaction(
       signedRawTransaction
     );

@@ -110,8 +110,18 @@ export function joinValidatorSetPayload(
   return {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.staking
-    }::whitelist_validator`,
+    }::join_validator_set`,
     arguments: [poolAddress.toString()],
+    type_arguments: [],
+  };
+}
+
+export function fillDittoBuffer(): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.staking
+    }::fill_ditto_buffer`,
+    arguments: [],
     type_arguments: [],
   };
 }

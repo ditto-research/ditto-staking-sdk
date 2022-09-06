@@ -10,8 +10,7 @@ export async function processTxn(
   payload: EntryFunctionPayload,
   _timeoutMs: number = 5000
 ): Promise<types.TxnResponse> {
-  const txnRequest = await wallet.generateTransaction(payload);
-  const txnHash = await wallet.signAndSubmitTransaction(txnRequest.data);
+  const txnHash = await wallet.signAndSubmitTransaction(payload);
   await Ditto.aptosClient.waitForTransaction(txnHash.data);
   let txnInfo: Transaction;
   try {
