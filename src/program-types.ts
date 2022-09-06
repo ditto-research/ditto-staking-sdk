@@ -7,7 +7,7 @@ export interface DittoPool {
   pendingStakeAmount: bigint;
   treasuryAmount: bigint;
   validatorStates: TableKeysAndHandle<HexString>; // Table<address, ValidatorState>
-  lastUpdateTimestamp: bigint;
+  epoch: bigint;
   totalPendingClaim: bigint;
   claimPoolAmount: bigint;
   userClaimState: TableKeysAndHandle<HexString>; // Table<address, UserClaimState>>

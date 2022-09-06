@@ -196,7 +196,7 @@ export class Ditto {
         keys: validatorStatesTableKeys,
         handle: resource.data.validator_states.table.handle,
       },
-      lastUpdateTimestamp: BigInt(resource.data.last_update_timestamp),
+      epoch: BigInt(resource.data.epoch),
       totalPendingClaim: BigInt(resource.data.total_pending_claim),
       claimPoolAmount: BigInt(resource.data.claim_pool.value),
       userClaimState: {

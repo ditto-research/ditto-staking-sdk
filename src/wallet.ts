@@ -93,12 +93,12 @@ export class DittoWallet implements Wallet {
 
   public async signAndSubmitTransaction(
     transaction: EntryFunctionPayload
-  ): Promise<{ data: string }> {
+  ): Promise<any> {
     const signedRawTransaction = await this.signTransaction(transaction);
     const response = await Ditto.aptosClient.submitTransaction(
       signedRawTransaction
     );
-    return { data: (response as any).hash };
+    return response.hash;
   }
 
   public async signTransaction(
