@@ -23,10 +23,17 @@ export async function processTxn(
     throw Error("Transaction wasn't a user transaction.");
   }
 
-  return {
+  let msg = (txnInfo as any).vm_status;
+  let response: types.TxnResponse = {
     hash: txnHash.hash,
-    msg: (txnInfo as any).vm_status,
+    msg,
   };
+
+  if (msg != "Executed successfully") {
+    throw response;
+  }
+
+  return response;
 }
 
 export async function getAccountAptosBalance(
