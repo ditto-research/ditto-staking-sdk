@@ -3,7 +3,12 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
-## [Unreleased]
+## [0.1.5]
+- Update aptos sdk to 1.3.10. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
+- Update wallet interface to be compatible with hippo-wallet-adapter. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
+- Upgrade to most recent smart contract structs and entrypoints. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
+
+## [0.1.4]
 
 - Update utils fundAccount(). ([#6](https://github.com/ditto-research/ditto-staking-sdk/pull/6))
 
