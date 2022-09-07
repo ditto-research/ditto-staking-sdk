@@ -19,7 +19,7 @@ export interface AccountKeys {
 }
 
 export interface Wallet {
-  publicAccount: AccountKeys;
+  account: AccountKeys;
   signAndSubmitTransaction(transaction: any, options?: any): Promise<any>;
   signTransaction(transaction: any, options?: any): Promise<any>;
 }
@@ -27,7 +27,7 @@ export interface Wallet {
 export class DummyWallet implements Wallet {
   constructor() {}
 
-  publicAccount: AccountKeys = null;
+  account: AccountKeys = null;
 
   async signAndSubmitTransaction(
     _transaction: any,
@@ -52,7 +52,7 @@ export class DittoWallet implements Wallet {
   }
   private _aptosTxnConfig: types.AptosTxnConfig;
 
-  public get publicAccount(): AccountKeys {
+  public get account(): AccountKeys {
     return this._account;
   }
   private _account: AccountKeys;

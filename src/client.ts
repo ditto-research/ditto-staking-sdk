@@ -15,7 +15,7 @@ export class Client {
   private _wallet: Wallet;
 
   public get address(): Address {
-    return this.wallet.publicAccount.address;
+    return this.wallet.account.address;
   }
 
   public get verifyTxnTimeoutMs(): number {
