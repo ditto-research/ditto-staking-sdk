@@ -74,25 +74,9 @@ export class DittoWallet implements Wallet {
     };
   }
 
-  public async generateTransaction(
-    transaction: EntryFunctionPayload
-  ): Promise<{ data: TxnBuilderTypes.RawTransaction }> {
-    const address = this._aptosAccount.address();
-    const txn = {
-      data: await Ditto.aptosClient.generateTransaction(address, transaction, {
-        max_gas_amount: this._aptosTxnConfig.maxGasAmount.toString(),
-        gas_unit_price: this._aptosTxnConfig.gasUnitPrice.toString(),
-        expiration_timestamp_secs: (
-          BigInt(Math.floor(Date.now() / 1000)) +
-          this._aptosTxnConfig.txnExpirationOffset
-        ).toString(),
-      }),
-    };
-    return txn;
-  }
-
   public async signAndSubmitTransaction(
-    transaction: EntryFunctionPayload
+    transaction: EntryFunctionPayload,
+    _options?: any
   ): Promise<any> {
     const signedRawTransaction = await this.signTransaction(transaction);
     const response = await Ditto.aptosClient.submitTransaction(
@@ -102,7 +86,8 @@ export class DittoWallet implements Wallet {
   }
 
   public async signTransaction(
-    transaction: EntryFunctionPayload
+    transaction: EntryFunctionPayload,
+    _options?: any
   ): Promise<Uint8Array> {
     const address = this._aptosAccount.address();
     const txn = await Ditto.aptosClient.generateTransaction(
