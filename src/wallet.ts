@@ -65,7 +65,7 @@ export class DittoWallet implements Wallet {
     signerPrivateKey: HexString,
     aptosTxnConfig: types.AptosTxnConfig
   ) {
-    this._aptosAccount = new AptosAccount(signerPrivateKey.toBuffer());
+    this._aptosAccount = new AptosAccount(signerPrivateKey.toUint8Array());
     this._aptosTxnConfig = aptosTxnConfig;
     this._account = {
       publicKey: this._aptosAccount.pubKey(),
