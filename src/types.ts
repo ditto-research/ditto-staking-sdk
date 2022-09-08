@@ -36,4 +36,5 @@ export enum DittoModule {
   staking = "ditto_staking",
   config = "ditto_config",
   coin = "staked_coin",
+  validatorBuffer = "validator_lockup_buffer",
 }

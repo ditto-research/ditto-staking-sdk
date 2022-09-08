@@ -36,6 +36,11 @@ export class Ditto {
   }
   private _dittoConfig: programTypes.DittoConfig = null;
 
+  public get validatorLockupBuffer(): programTypes.ValidatorLockupBuffer {
+    return this._validatorLockupBuffer;
+  }
+  private _validatorLockupBuffer: programTypes.ValidatorLockupBuffer = null;
+
   public get dittoPool(): programTypes.DittoPool {
     return this._dittoPool;
   }
@@ -150,6 +155,16 @@ export class Ditto {
     return txnRes;
   }
 
+  public async fillDittoBuffer(): Promise<types.TxnResponse> {
+    let fillDittoBufferPayload = payload.fillDittoBuffer();
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      fillDittoBufferPayload,
+      this._verifyTxnTimeoutMs
+    );
+    return txnRes;
+  }
+
   public async refreshDittoPool() {
     const resource: any = await this._aptosClient.getAccountResource(
       this._contractAddress,
@@ -173,6 +188,7 @@ export class Ditto {
 
     this._dittoPool = {
       totalAptos: BigInt(resource.data.total_aptos),
+      queuedAptosForBuffer: BigInt(resource.data.queued_aptos_for_buffer),
       aptosBufferAmount: BigInt(resource.data.aptos_buffer.value),
       pendingStakeAmount: BigInt(resource.data.pending_stake.value),
       treasuryAmount: BigInt(resource.data.treasury.value),
@@ -180,7 +196,7 @@ export class Ditto {
         keys: validatorStatesTableKeys,
         handle: resource.data.validator_states.table.handle,
       },
-      lastUpdateTimestamp: BigInt(resource.data.last_update_timestamp),
+      epoch: BigInt(resource.data.epoch),
       totalPendingClaim: BigInt(resource.data.total_pending_claim),
       claimPoolAmount: BigInt(resource.data.claim_pool.value),
       userClaimState: {
@@ -215,7 +231,7 @@ export class Ditto {
       `${this._contractAddress}::${types.DittoModule.staking}::ValidatorWhitelist`
     );
     if (resource == null) {
-      throw Error("UnstakeTracker fetch returned null");
+      throw Error("Validator whitelist fetch returned null");
     }
 
     this._validatorWhitelist = {
@@ -223,10 +239,35 @@ export class Ditto {
     };
   }
 
+  public async refreshValidatorLockupBuffer() {
+    const resource: any = await this._aptosClient.getAccountResource(
+      this._contractAddress,
+      `${this._contractAddress}::${types.DittoModule.validatorBuffer}::ValidatorLockupBuffer`
+    );
+    if (resource == null) {
+      throw Error("Validator lockup buffer fetch returned null");
+    }
+
+    let validatorAddrs: HexString[] = [];
+    for (let i = 0; i < resource.data.validator_addrs.length; i++) {
+      let key = new HexString(resource.data.validator_addrs[i]);
+      validatorAddrs.push(key);
+    }
+
+    this._validatorLockupBuffer = {
+      validatorAddrs,
+      head: BigInt(resource.data.head),
+      cachedHeadLockupRemainingSecs: BigInt(
+        resource.data.cached_head_lockup_remaining_secs
+      ),
+    };
+  }
+
   public async refreshDittoResources() {
     await this.refreshDittoPool();
     await this.refreshDittoConfig();
     await this.refreshValidatorWhitelist();
+    await this.refreshValidatorLockupBuffer();
     if (this._isInitialized == false) {
       this._isInitialized = true;
     }

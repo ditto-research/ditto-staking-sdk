@@ -2,11 +2,12 @@ import { HexString } from "aptos";
 
 export interface DittoPool {
   totalAptos: bigint;
+  queuedAptosForBuffer: bigint;
   aptosBufferAmount: bigint;
   pendingStakeAmount: bigint;
   treasuryAmount: bigint;
   validatorStates: TableKeysAndHandle<HexString>; // Table<address, ValidatorState>
-  lastUpdateTimestamp: bigint;
+  epoch: bigint;
   totalPendingClaim: bigint;
   claimPoolAmount: bigint;
   userClaimState: TableKeysAndHandle<HexString>; // Table<address, UserClaimState>>
@@ -42,6 +43,12 @@ export interface DittoConfig {
   protocolFeeSharePct: bigint;
   instantUnstakeFeeBps: bigint;
   requireValidatorWhitelist: boolean;
+}
+
+export interface ValidatorLockupBuffer {
+  validatorAddrs: Array<HexString>;
+  head: bigint;
+  cachedHeadLockupRemainingSecs: bigint;
 }
 
 export interface TableKeysAndHandle<T> {
