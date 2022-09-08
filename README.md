@@ -4,7 +4,7 @@
 
 | Network |                                Value                                 |
 | ------- | :------------------------------------------------------------------: |
-| Devnet  | `0x6effdeb5d61295008a14f90db251d623ff3da749f82d7bc05b47838b1414362b` |
+| Devnet  | `0x615ae3df6912126b0331cb30e44ce6dc270fe5203af85cbe49615268f5e75dac` |
 
 # How to use it
 
