@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
+## [0.1.6]
+- Add error parsing. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
+
 ## [0.1.5]
 - Update aptos sdk to 1.3.10. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
 - Update wallet interface to be compatible with hippo-wallet-adapter. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
