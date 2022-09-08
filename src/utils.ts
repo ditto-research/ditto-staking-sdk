@@ -4,6 +4,7 @@ import { EntryFunctionPayload, Transaction } from "aptos/dist/generated";
 import { Wallet } from "./wallet";
 import * as types from "./types";
 import * as programTypes from "./program-types";
+import * as errors from "./errors";
 
 export async function processTxn(
   wallet: Wallet,
@@ -29,11 +30,35 @@ export async function processTxn(
     msg,
   };
 
-  if (msg != "Executed successfully") {
-    throw response;
+  if (msg.startsWith("Move abort in")) {
+    throw parseError(msg);
   }
 
   return response;
+}
+
+export function parseError(errorMsg: string): errors.DittoError | string {
+  "Move abort in 0x82038eeccf810b5cf24643515afac90442b4215b0c59fe1afae52203de036ccb::ditto_config: ERR_INVALID_CONFIG(0x66): ";
+  try {
+    let cleanedErrMsg = errorMsg.replace("Move abort in ", "");
+
+    let logs: string[] = cleanedErrMsg.split(" ").filter((s) => s);
+
+    // Example logs: string[] = [
+    // "SMART_CONTRACT_ADDRESS::MODULE_NAME:",
+    // "MOVE_ERROR_MSG(MOVE_ERROR_CODE):"
+    // ]
+
+    let module = logs[0].slice(0, -1).split("::")[1];
+    let errCodeHexStr = logs[1].split(/[()]/)[1];
+    return {
+      code: errCodeHexStr,
+      nativeMsg: cleanedErrMsg,
+      msg: errors.ERROR_MAP[module][Number(errCodeHexStr)],
+    };
+  } catch (e) {
+    return errorMsg;
+  }
 }
 
 export async function getAccountAptosBalance(

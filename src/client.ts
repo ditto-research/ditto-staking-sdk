@@ -83,7 +83,7 @@ export class Client {
     return txnRes;
   }
 
-  public async registerStAptos(): Promise<types.TxnResponse> {
+  public async registerStaptos(): Promise<types.TxnResponse> {
     let registerStAptosPayload = payload.registerStAptosPayload();
     const txnRes = await utils.processTxn(
       this._wallet,

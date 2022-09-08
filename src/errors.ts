@@ -14,19 +14,19 @@ export const ERROR_MAP = {
     111: "Validator has already been whitelisted.",
     112: "Validator has not been whitelisted.",
     113: "Validator is not part of Ditto Pool.",
-    114: "Validator is not inactive",
-    115: "Ditto Admin is not allowed to perform this action",
+    114: "Validator is not inactive.",
+    115: "Ditto Admin is not allowed to perform this action.",
   },
   ditto_config: {
     100: "Signer is not the Ditto admin.",
     101: "Ditto Config has already been initialized",
-    102: "Invalid Ditto Config parameters",
+    102: "Invalid Ditto Config parameters.",
   },
   staked_coin: {
     100: "Signer is not the Ditto admin.",
   },
   table_with_keys: {
-    100: "Key was not found in the table",
+    100: "Key was not found in the table.",
   },
   validator_lockup_buffer: {
     100: "Signer is not the Ditto admin.",
@@ -34,3 +34,9 @@ export const ERROR_MAP = {
     102: "There are no validators in Ditto Pool.",
   },
 };
+
+export interface DittoError {
+  code: string;
+  nativeMsg: string;
+  msg: string;
+}
