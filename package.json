@@ -1,13 +1,13 @@
 {
   "name": "@ditto-research/staking-sdk",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Ditto SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
-    "pack": "rm -rf dist ditto-sdk-0.1.*.tgz && tsc && npm pack",
+    "pack": "rm -rf dist ditto-sdk-0.2.*.tgz && tsc && npm pack",
     "typecheck": "tsc --watch --noEmit"
   },
   "dependencies": {
