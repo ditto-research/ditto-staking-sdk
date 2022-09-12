@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
+## [0.2.0]
+- Fix error parsing and add update aptos sdk to 1.3.11. ([#9](https://github.com/ditto-research/ditto-staking-sdk/pull/9))
+
 ## [0.1.6]
 - Add error parsing. ([#8](https://github.com/ditto-research/ditto-staking-sdk/pull/8))
 
