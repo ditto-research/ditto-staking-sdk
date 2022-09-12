@@ -37,7 +37,7 @@ export async function processTxn(
   return response;
 }
 
-export function parseError(errorMsg: string): errors.DittoError | Error {
+export function parseError(errorMsg: string): Error {
   "Move abort in 0x82038eeccf810b5cf24643515afac90442b4215b0c59fe1afae52203de036ccb::ditto_config: ERR_INVALID_CONFIG(0x66): ";
   try {
     let cleanedErrMsg = errorMsg.replace("Move abort in ", "");
