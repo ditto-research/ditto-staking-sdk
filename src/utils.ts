@@ -37,7 +37,7 @@ export async function processTxn(
   return response;
 }
 
-export function parseError(errorMsg: string): errors.DittoError | string {
+export function parseError(errorMsg: string): errors.DittoError | Error {
   "Move abort in 0x82038eeccf810b5cf24643515afac90442b4215b0c59fe1afae52203de036ccb::ditto_config: ERR_INVALID_CONFIG(0x66): ";
   try {
     let cleanedErrMsg = errorMsg.replace("Move abort in ", "");
@@ -57,36 +57,46 @@ export function parseError(errorMsg: string): errors.DittoError | string {
       msg: errors.ERROR_MAP[module][Number(errCodeHexStr)],
     };
   } catch (e) {
-    return errorMsg;
+    return Error(errorMsg);
   }
 }
 
 export async function getAccountAptosBalance(
   accountAddr: MaybeHexString
 ): Promise<number | null> {
-  const resource = await Ditto.aptosClient.getAccountResource(
-    accountAddr,
-    "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>"
-  );
-  if (resource == null) {
-    return null;
-  }
+  try {
+    const resource = await Ditto.aptosClient.getAccountResource(
+      accountAddr,
+      "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>"
+    );
+    if (resource == null) {
+      return null;
+    }
 
-  return parseInt((resource.data as any)["coin"]["value"]);
+    return parseInt((resource.data as any)["coin"]["value"]);
+  } catch (e) {
+    console.log(e);
+    return 0;
+  }
 }
 
 export async function getAccountStaptosBalance(
   accountAddr: MaybeHexString
 ): Promise<number | null> {
-  const resource = await Ditto.aptosClient.getAccountResource(
-    accountAddr,
-    `0x1::coin::CoinStore<${Ditto.contractAddress}::staked_coin::StakedAptos>`
-  );
-  if (resource == null) {
-    return null;
-  }
+  try {
+    const resource = await Ditto.aptosClient.getAccountResource(
+      accountAddr,
+      `0x1::coin::CoinStore<${Ditto.contractAddress}::staked_coin::StakedAptos>`
+    );
+    if (resource == null) {
+      return null;
+    }
 
-  return parseInt((resource.data as any)["coin"]["value"]);
+    return parseInt((resource.data as any)["coin"]["value"]);
+  } catch (e) {
+    console.log(e);
+    return 0;
+  }
 }
 
 export async function getStaptosInfo(): Promise<programTypes.CoinInfo> {
