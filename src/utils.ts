@@ -140,12 +140,30 @@ export async function fundAccount(
   return tnxHashes;
 }
 
+// Raw JSON objects from Aptos REST endpoint
+
 export async function getStakePoolResource(
   validatorKey: HexString
 ): Promise<any> {
   let validatorStakePool = await Ditto.aptosClient.getAccountResource(
     validatorKey,
     "0x1::stake::StakePool"
+  );
+  return validatorStakePool.data;
+}
+
+export async function getValidatorSetResource(): Promise<any> {
+  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
+    "0x1",
+    "0x1::stake::ValidatorSet"
+  );
+  return validatorStakePool.data;
+}
+
+export async function getStakingConfigResource(): Promise<any> {
+  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
+    "0x1",
+    "0x1::staking_config::StakingConfig"
   );
   return validatorStakePool.data;
 }
