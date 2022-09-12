@@ -51,11 +51,11 @@ export function parseError(errorMsg: string): errors.DittoError | Error {
 
     let module = logs[0].slice(0, -1).split("::")[1];
     let errCodeHexStr = logs[1].split(/[()]/)[1];
-    return {
-      code: errCodeHexStr,
-      nativeMsg: cleanedErrMsg,
-      msg: errors.ERROR_MAP[module][Number(errCodeHexStr)],
-    };
+    return new errors.DittoError(
+      errCodeHexStr,
+      cleanedErrMsg,
+      errors.ERROR_MAP[module][Number(errCodeHexStr)]
+    );
   } catch (e) {
     return Error(errorMsg);
   }

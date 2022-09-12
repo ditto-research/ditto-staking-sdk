@@ -35,8 +35,21 @@ export const ERROR_MAP = {
   },
 };
 
-export interface DittoError {
-  code: string;
-  nativeMsg: string;
-  msg: string;
+export class DittoError extends Error {
+  public code(): string {
+    return this._code;
+  }
+  private _code: string;
+
+  public nativeMsg(): string {
+    return this._nativeMsg;
+  }
+  private _nativeMsg: string;
+
+  constructor(code: string, nativeMsg: string, message: string) {
+    super(message);
+    this.name = "DittoError";
+    this._code = code;
+    this._nativeMsg = nativeMsg;
+  }
 }
