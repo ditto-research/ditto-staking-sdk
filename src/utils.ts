@@ -1,6 +1,10 @@
 import { ditto as Ditto } from "./ditto";
 import { MaybeHexString, FaucetClient, HexString } from "aptos";
-import { EntryFunctionPayload, Transaction } from "aptos/dist/generated";
+import {
+  EntryFunctionPayload,
+  Transaction,
+  UserTransaction,
+} from "aptos/src/generated";
 import { Wallet } from "./wallet";
 import * as types from "./types";
 import * as programTypes from "./program-types";
@@ -24,7 +28,7 @@ export async function processTxn(
     throw Error("Transaction wasn't a user transaction.");
   }
 
-  let msg = (txnInfo as any).vm_status;
+  let msg = (txnInfo as UserTransaction).vm_status;
   let response: types.TxnResponse = {
     hash: txnHash.hash,
     msg,
