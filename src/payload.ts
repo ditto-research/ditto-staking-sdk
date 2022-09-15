@@ -1,6 +1,6 @@
 import { ditto as Ditto } from "./ditto";
-import { EntryFunctionPayload } from "aptos/dist/generated";
 import { HexString } from "aptos";
+import { EntryFunctionPayload } from "aptos/src/generated";
 import * as programTypes from "./program-types";
 import * as types from "./types";
 

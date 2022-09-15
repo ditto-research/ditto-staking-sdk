@@ -1,11 +1,6 @@
 import { ditto as Ditto } from "./ditto";
-import { EntryFunctionPayload, TransactionPayload } from "aptos/dist/generated";
-import {
-  AptosAccount,
-  HexString,
-  MaybeHexString,
-  TxnBuilderTypes,
-} from "aptos";
+import { EntryFunctionPayload } from "aptos/src/generated";
+import { AptosAccount, HexString, MaybeHexString } from "aptos";
 import * as types from "./types";
 
 export type PublicKey = MaybeHexString;
