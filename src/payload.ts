@@ -13,9 +13,11 @@ export function initializePayload(
     }::initialize`,
     arguments: [
       args.poolBufferPct,
+      args.poolBufferFeeIncreaseThresholdPct,
       args.rewardsFeePct,
       args.protocolFeeSharePct,
-      args.instantUnstakeFeeBps,
+      args.minInstantUnstakeFeeBps,
+      args.maxInstantUnstakeFeeBps,
       args.requireValidatorWhitelist,
     ],
     type_arguments: [],
@@ -126,16 +128,64 @@ export function fillDittoBuffer(): EntryFunctionPayload {
   };
 }
 
-export function updateDittoConfigPayload(
-  paramToUpdate: types.UpdateDittoConfigParam,
-  newValue: bigint | boolean
+export function updatePoolBufferPcts(
+  poolBufferPct: bigint,
+  poolBufferFeeIncreaseThresholdPct: bigint
 ): EntryFunctionPayload {
-  let arg = typeof newValue === "bigint" ? Number(newValue) : newValue;
   return {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.config
-    }::${paramToUpdate}`,
-    arguments: [arg],
+    }::update_pool_buffer_pcts`,
+    arguments: [poolBufferPct, poolBufferFeeIncreaseThresholdPct],
+    type_arguments: [],
+  };
+}
+
+export function updateRewardsFeePct(
+  rewardsFeePct: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_rewards_fee_pct`,
+    arguments: [rewardsFeePct],
+    type_arguments: [],
+  };
+}
+
+export function updateProtocolFeeSharePct(
+  protocolFeeSharePct: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_protocol_fee_share_pct`,
+    arguments: [protocolFeeSharePct],
+    type_arguments: [],
+  };
+}
+
+export function updateInstantUnstakeFeesBps(
+  minInstantUnstakeFeeBps: bigint,
+  maxInstantUnstakeFeeBps: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_instant_unstake_fees_bps`,
+    arguments: [minInstantUnstakeFeeBps, maxInstantUnstakeFeeBps],
+    type_arguments: [],
+  };
+}
+
+export function updateRequireValidatorWhitelist(
+  requireValidatorWhitelist: boolean
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_require_validator_whitelist`,
+    arguments: [requireValidatorWhitelist],
     type_arguments: [],
   };
 }
