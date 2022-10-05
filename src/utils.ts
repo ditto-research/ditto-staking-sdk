@@ -192,5 +192,5 @@ export function getExpectedInstantUnstakingFees(
         (1 - ratio);
   }
 
-  return (Number(instantUnstakeAmount) * feeToPayBps) / 10000;
+  return Math.floor((Number(instantUnstakeAmount) * feeToPayBps) / 10000);
 }
