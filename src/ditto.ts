@@ -92,17 +92,29 @@ export class Ditto {
     return txnRes;
   }
 
-  public async updatePoolBufferPcts(
-    poolBufferPct: bigint,
-    poolBufferFeeIncreaseThresholdPct: bigint
+  public async updatePoolBufferPct(
+    poolBufferPct: bigint
   ): Promise<types.TxnResponse> {
-    let updatePoolBufferPctsPayload = payload.updatePoolBufferPcts(
-      poolBufferPct,
-      poolBufferFeeIncreaseThresholdPct
-    );
+    let updatePoolBufferPctPayload = payload.updatePoolBufferPct(poolBufferPct);
     const txnRes = await utils.processTxn(
       this._wallet,
-      updatePoolBufferPctsPayload,
+      updatePoolBufferPctPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updatePoolBufferFeeIncreaseThresholdPct(
+    poolBufferFeeIncreaseThresholdPct: bigint
+  ): Promise<types.TxnResponse> {
+    let updatePoolBufferFeeIncreaseThresholdPctPayload =
+      payload.updatePoolBufferFeeIncreaseThresholdPct(
+        poolBufferFeeIncreaseThresholdPct
+      );
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updatePoolBufferFeeIncreaseThresholdPctPayload,
       this._verifyTxnTimeoutMs
     );
     await this.refreshDittoConfig();
@@ -136,18 +148,28 @@ export class Ditto {
     return txnRes;
   }
 
-  public async updateInstantUnstakeFeesBps(
-    minInstantUnstakeFeeBps: bigint,
-    maxInstantUnstakeFeeBps: bigint
+  public async updateMinInstantUnstakeFeeBps(
+    minInstantUnstakeFeeBps: bigint
   ): Promise<types.TxnResponse> {
-    let updateInstantUnstakeFeesBpsPayload =
-      payload.updateInstantUnstakeFeesBps(
-        minInstantUnstakeFeeBps,
-        maxInstantUnstakeFeeBps
-      );
+    let updateMinInstantUnstakeFeeBpsPayload =
+      payload.updateMinInstantUnstakeFeeBps(minInstantUnstakeFeeBps);
     const txnRes = await utils.processTxn(
       this._wallet,
-      updateInstantUnstakeFeesBpsPayload,
+      updateMinInstantUnstakeFeeBpsPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateMaxInstantUnstakeFeeBps(
+    maxInstantUnstakeFeeBps: bigint
+  ): Promise<types.TxnResponse> {
+    let updateMaxInstantUnstakeFeeBpsPayload =
+      payload.updateMaxInstantUnstakeFeeBps(maxInstantUnstakeFeeBps);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateMaxInstantUnstakeFeeBpsPayload,
       this._verifyTxnTimeoutMs
     );
     await this.refreshDittoConfig();

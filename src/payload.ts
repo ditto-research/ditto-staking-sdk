@@ -128,15 +128,26 @@ export function fillDittoBuffer(): EntryFunctionPayload {
   };
 }
 
-export function updatePoolBufferPcts(
-  poolBufferPct: bigint,
+export function updatePoolBufferPct(
+  poolBufferPct: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_pool_buffer_pct`,
+    arguments: [poolBufferPct],
+    type_arguments: [],
+  };
+}
+
+export function updatePoolBufferFeeIncreaseThresholdPct(
   poolBufferFeeIncreaseThresholdPct: bigint
 ): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.config
-    }::update_pool_buffer_pcts`,
-    arguments: [poolBufferPct, poolBufferFeeIncreaseThresholdPct],
+    }::update_pool_buffer_fee_increase_threshold_pct`,
+    arguments: [poolBufferFeeIncreaseThresholdPct],
     type_arguments: [],
   };
 }
@@ -165,15 +176,26 @@ export function updateProtocolFeeSharePct(
   };
 }
 
-export function updateInstantUnstakeFeesBps(
-  minInstantUnstakeFeeBps: bigint,
+export function updateMinInstantUnstakeFeeBps(
+  minInstantUnstakeFeeBps: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_min_instant_unstake_fee_bps`,
+    arguments: [minInstantUnstakeFeeBps],
+    type_arguments: [],
+  };
+}
+
+export function updateMaxInstantUnstakeFeeBps(
   maxInstantUnstakeFeeBps: bigint
 ): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${
       types.DittoModule.config
-    }::update_instant_unstake_fees_bps`,
-    arguments: [minInstantUnstakeFeeBps, maxInstantUnstakeFeeBps],
+    }::update_max_instant_unstake_fee_bps`,
+    arguments: [maxInstantUnstakeFeeBps],
     type_arguments: [],
   };
 }
