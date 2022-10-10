@@ -174,7 +174,7 @@ export async function getStakingConfigResource(): Promise<any> {
 
 export function getExpectedInstantUnstakingFees(
   instantUnstakeAmount: bigint
-): any {
+): number {
   let expectedBufferAmount =
     (Number(Ditto.dittoPool.totalAptos) *
       Number(Ditto.dittoConfig.poolBufferFeeIncreaseThresholdPct)) /
