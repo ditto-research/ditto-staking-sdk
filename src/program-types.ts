@@ -45,6 +45,7 @@ export interface DittoConfig {
   minInstantUnstakeFeeBps: bigint;
   maxInstantUnstakeFeeBps: bigint;
   requireValidatorWhitelist: boolean;
+  maxNValidators: bigint;
 }
 
 export interface ValidatorLockupBuffer {
