@@ -5,7 +5,7 @@ Version changes are pinned to SDK releases.
 
 ## [Unreleased]
 
-- - Set a maximum number of validators that can be added to Ditto.
+- Set a maximum number of validators that can be added to Ditto.
 
 ## [0.3.0]
 
