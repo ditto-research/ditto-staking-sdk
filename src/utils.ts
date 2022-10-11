@@ -171,3 +171,26 @@ export async function getStakingConfigResource(): Promise<any> {
   );
   return validatorStakePool.data;
 }
+
+export function getExpectedInstantUnstakingFees(
+  instantUnstakeAmount: bigint
+): number {
+  let expectedBufferAmount =
+    (Number(Ditto.dittoPool.totalAptos) *
+      Number(Ditto.dittoConfig.poolBufferFeeIncreaseThresholdPct)) /
+    100;
+
+  let ratio =
+    Number(Ditto.dittoPool.aptosBufferAmount) / Number(expectedBufferAmount);
+
+  let feeToPayBps: number = Number(Ditto.dittoConfig.minInstantUnstakeFeeBps);
+  if (ratio < 1) {
+    feeToPayBps =
+      Number(Ditto.dittoConfig.minInstantUnstakeFeeBps) +
+      (Number(Ditto.dittoConfig.maxInstantUnstakeFeeBps) -
+        Number(Ditto.dittoConfig.minInstantUnstakeFeeBps)) *
+        (1 - ratio);
+  }
+
+  return Math.floor((Number(instantUnstakeAmount) * feeToPayBps) / 10000);
+}

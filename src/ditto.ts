@@ -92,17 +92,98 @@ export class Ditto {
     return txnRes;
   }
 
-  public async updateDittoConfig(
-    paramToUpdate: types.UpdateDittoConfigParam,
-    newValue: bigint | boolean
+  public async updatePoolBufferPct(
+    poolBufferPct: bigint
   ): Promise<types.TxnResponse> {
-    let updateDittoConfigPayload = payload.updateDittoConfigPayload(
-      paramToUpdate,
-      newValue
-    );
+    let updatePoolBufferPctPayload = payload.updatePoolBufferPct(poolBufferPct);
     const txnRes = await utils.processTxn(
       this._wallet,
-      updateDittoConfigPayload,
+      updatePoolBufferPctPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updatePoolBufferFeeIncreaseThresholdPct(
+    poolBufferFeeIncreaseThresholdPct: bigint
+  ): Promise<types.TxnResponse> {
+    let updatePoolBufferFeeIncreaseThresholdPctPayload =
+      payload.updatePoolBufferFeeIncreaseThresholdPct(
+        poolBufferFeeIncreaseThresholdPct
+      );
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updatePoolBufferFeeIncreaseThresholdPctPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateRewardsFeePct(
+    rewardsFeePct: bigint
+  ): Promise<types.TxnResponse> {
+    let updateRewardsFeePct = payload.updateRewardsFeePct(rewardsFeePct);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateRewardsFeePct,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateProtocolFeeSharePct(
+    protocolFeeSharePct: bigint
+  ): Promise<types.TxnResponse> {
+    let updateProtocolFeeSharePctPayload =
+      payload.updateProtocolFeeSharePct(protocolFeeSharePct);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateProtocolFeeSharePctPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateMinInstantUnstakeFeeBps(
+    minInstantUnstakeFeeBps: bigint
+  ): Promise<types.TxnResponse> {
+    let updateMinInstantUnstakeFeeBpsPayload =
+      payload.updateMinInstantUnstakeFeeBps(minInstantUnstakeFeeBps);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateMinInstantUnstakeFeeBpsPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateMaxInstantUnstakeFeeBps(
+    maxInstantUnstakeFeeBps: bigint
+  ): Promise<types.TxnResponse> {
+    let updateMaxInstantUnstakeFeeBpsPayload =
+      payload.updateMaxInstantUnstakeFeeBps(maxInstantUnstakeFeeBps);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateMaxInstantUnstakeFeeBpsPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
+  public async updateRequireValidatorWhitelist(
+    requireValidatorWhitelist: boolean
+  ): Promise<types.TxnResponse> {
+    let updateRequireValidatorWhitelistPayload =
+      payload.updateRequireValidatorWhitelist(requireValidatorWhitelist);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateRequireValidatorWhitelistPayload,
       this._verifyTxnTimeoutMs
     );
     await this.refreshDittoConfig();
@@ -218,9 +299,17 @@ export class Ditto {
 
     this._dittoConfig = {
       poolBufferPct: BigInt(resource.data.pool_buffer_pct),
+      poolBufferFeeIncreaseThresholdPct: BigInt(
+        resource.data.pool_buffer_fee_increase_threshold_pct
+      ),
       rewardsFeePct: BigInt(resource.data.rewards_fee_pct),
       protocolFeeSharePct: BigInt(resource.data.protocol_fee_share_pct),
-      instantUnstakeFeeBps: BigInt(resource.data.instant_unstake_fee_bps),
+      minInstantUnstakeFeeBps: BigInt(
+        resource.data.min_instant_unstake_fee_bps
+      ),
+      maxInstantUnstakeFeeBps: BigInt(
+        resource.data.max_instant_unstake_fee_bps
+      ),
       requireValidatorWhitelist: resource.data.require_validator_whitelist,
     };
   }

@@ -39,9 +39,11 @@ export interface ValidatorWhitelist {
 }
 export interface DittoConfig {
   poolBufferPct: bigint;
+  poolBufferFeeIncreaseThresholdPct: bigint;
   rewardsFeePct: bigint;
   protocolFeeSharePct: bigint;
-  instantUnstakeFeeBps: bigint;
+  minInstantUnstakeFeeBps: bigint;
+  maxInstantUnstakeFeeBps: bigint;
   requireValidatorWhitelist: boolean;
 }
 
