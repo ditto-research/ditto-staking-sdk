@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
+## [Unreleased]
+
+- - Set a maximum number of validators that can be added to Ditto.
+
 ## [0.3.0]
 
 - Change how update ditto config works and add in extra params for unstake fee changes. ([#12](https://github.com/ditto-research/ditto-staking-sdk/pull/12))

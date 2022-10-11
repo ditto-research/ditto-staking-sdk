@@ -212,6 +212,18 @@ export function updateRequireValidatorWhitelist(
   };
 }
 
+export function updateMaxNValidators(
+  maxNValidators: bigint
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.config
+    }::update_max_n_validators`,
+    arguments: [maxNValidators],
+    type_arguments: [],
+  };
+}
+
 export function registerStAptosPayload(): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${

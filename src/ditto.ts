@@ -190,6 +190,20 @@ export class Ditto {
     return txnRes;
   }
 
+  public async updateMaxNValidators(
+    maxNValidators: bigint
+  ): Promise<types.TxnResponse> {
+    let updateMaxNValidatorsPayload =
+      payload.updateMaxNValidators(maxNValidators);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      updateMaxNValidatorsPayload,
+      this._verifyTxnTimeoutMs
+    );
+    await this.refreshDittoConfig();
+    return txnRes;
+  }
+
   public async updateDittoState(): Promise<types.TxnResponse> {
     let updateDittoStatePayload = payload.updateDittoStatePayload();
     const txnRes = await utils.processTxn(
@@ -311,6 +325,7 @@ export class Ditto {
         resource.data.max_instant_unstake_fee_bps
       ),
       requireValidatorWhitelist: resource.data.require_validator_whitelist,
+      maxNValidators: resource.data.max_n_validators,
     };
   }
 
