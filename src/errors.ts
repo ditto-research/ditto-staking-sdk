@@ -16,6 +16,8 @@ export const ERROR_MAP = {
     113: "Validator is not part of Ditto Pool.",
     114: "Validator is not inactive.",
     115: "Ditto Admin is not allowed to perform this action.",
+    116: "Exceeded maximum number of validators in Ditto Pool.",
+    117: "There are no validators in Ditto Pool.",
   },
   ditto_config: {
     100: "Signer is not the Ditto admin.",
