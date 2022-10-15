@@ -30,3 +30,10 @@ export enum DittoModule {
   coin = "staked_coin",
   validatorBuffer = "validator_lockup_buffer",
 }
+
+export enum DittoEventType {
+  stake = "stake_events",
+  instant_unstake = "instant_unstake_events",
+  delayed_unstake = "delayed_unstake_events",
+  claim_aptos = "claim_aptos_events",
+}

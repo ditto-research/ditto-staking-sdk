@@ -65,3 +65,27 @@ export interface CoinInfo {
   supply: bigint;
   symbol: string;
 }
+
+export interface StakeEvent {
+  user: HexString;
+  aptAmountStaked: bigint;
+  staptAmountRcvd: bigint;
+}
+
+export interface InstantUnstakeEvent {
+  user: HexString;
+  staptAmountExchanged: bigint;
+  aptAmountRcvd: bigint;
+  feesPaid: bigint;
+}
+
+export interface DelayedUnstakeEvent {
+  user: HexString;
+  staptAmountExchanged: bigint;
+  aptAmountToRcv: bigint;
+}
+
+export interface ClaimAptosEvent {
+  user: HexString;
+  aptAmountRcvd: bigint;
+}

@@ -19,6 +19,7 @@ export function initializePayload(
       args.minInstantUnstakeFeeBps,
       args.maxInstantUnstakeFeeBps,
       args.requireValidatorWhitelist,
+      args.maxNValidators,
     ],
     type_arguments: [],
   };
