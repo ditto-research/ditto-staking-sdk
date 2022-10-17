@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
+## [0.4.1]
+
+- upgrade aptos to 1.3.16
+
 ## [0.4.0]
 
 - Set a maximum number of validators that can be added to Ditto.
