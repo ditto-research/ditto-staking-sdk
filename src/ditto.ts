@@ -468,6 +468,14 @@ export class Ditto {
     return item;
   }
 
+  public async getEvents(eventType: types.DittoEventType): Promise<any> {
+    return await this._aptosClient.getEventsByEventHandle(
+      this._contractAddress,
+      `${this._contractAddress}::${types.DittoModule.staking}::DittoPool`,
+      eventType
+    );
+  }
+
   public setVerifyTxnTimeoutMs(newValue: number) {
     this._verifyTxnTimeoutMs = newValue;
   }

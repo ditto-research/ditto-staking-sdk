@@ -65,3 +65,84 @@ export interface CoinInfo {
   supply: bigint;
   symbol: string;
 }
+
+export interface StakeEvent {
+  timestamp: bigint;
+  user: HexString;
+  aptAmountStaked: bigint;
+  staptAmountRcvd: bigint;
+}
+
+export interface InstantUnstakeEvent {
+  timestamp: bigint;
+  user: HexString;
+  staptAmountExchanged: bigint;
+  aptAmountRcvd: bigint;
+  feesPaid: bigint;
+}
+
+export interface DelayedUnstakeEvent {
+  timestamp: bigint;
+  user: HexString;
+  staptAmountExchanged: bigint;
+  aptAmountToRcv: bigint;
+}
+
+export interface ClaimAptosEvent {
+  timestamp: bigint;
+  user: HexString;
+  aptAmountRcvd: bigint;
+}
+
+export interface AddValidatorEvent {
+  timestamp: bigint;
+  validator: HexString;
+  activeStake: bigint;
+  inactiveStake: bigint;
+  pendingActiveStake: bigint;
+  pendingInactiveStake: bigint;
+}
+
+export interface ValidatorPerformanceEvent {
+  timestamp: bigint;
+  validator: HexString;
+  epoch: bigint;
+  activeStake: bigint;
+  reward: bigint;
+}
+
+export interface DittoPerformanceEvent {
+  timestamp: bigint;
+  epoch: bigint;
+  totalAptos: bigint;
+  validatorRewards: bigint;
+  treasuryRewards: bigint;
+  poolRewards: bigint;
+}
+
+export interface ValidatorRewardDistributionEvent {
+  timestamp: bigint;
+  validator: HexString;
+  epoch: bigint;
+  rewardDistributed: bigint;
+}
+
+export interface UnstakeTicketFillEvent {
+  timestamp: bigint;
+  user: HexString;
+  validator: HexString;
+  aptAmountToRcv: bigint;
+}
+
+export interface ValidatorStakeDistributionEvent {
+  timestamp: bigint;
+  validator: HexString;
+  stakeDistributed: bigint;
+}
+
+export interface AddToPoolBufferEvent {
+  timestamp: bigint;
+  epoch: bigint;
+  amountAdded: bigint;
+  instruction: string;
+}
