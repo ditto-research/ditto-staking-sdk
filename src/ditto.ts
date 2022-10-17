@@ -468,52 +468,12 @@ export class Ditto {
     return item;
   }
 
-  public async getEvents(
-    eventType: types.DittoEventType
-  ): Promise<
-    | programTypes.StakeEvent[]
-    | programTypes.InstantUnstakeEvent[]
-    | programTypes.DelayedUnstakeEvent[]
-    | programTypes.ClaimAptosEvent[]
-  > {
-    let events = await this._aptosClient.getEventsByEventHandle(
+  public async getEvents(eventType: types.DittoEventType): Promise<any> {
+    return await this._aptosClient.getEventsByEventHandle(
       this._contractAddress,
       `${this._contractAddress}::${types.DittoModule.staking}::DittoPool`,
       eventType
     );
-    let readableEvents = [];
-    for (let i = 0; i < events.length; i++) {
-      switch (eventType) {
-        case types.DittoEventType.stake:
-          readableEvents.push({
-            user: new HexString(events[i].data.user),
-            aptAmountStaked: BigInt(events[i].data.apt_amount_staked),
-            staptAmountRcvd: BigInt(events[i].data.stapt_amount_rcvd),
-          });
-          break;
-        case types.DittoEventType.instant_unstake:
-          readableEvents.push({
-            user: new HexString(events[i].data.user),
-            staptAmountExchanged: BigInt(events[i].data.stapt_amount_exchanged),
-            aptAmountRcvd: BigInt(events[i].data.apt_amount_rcvd),
-          });
-          break;
-        case types.DittoEventType.delayed_unstake:
-          readableEvents.push({
-            user: new HexString(events[i].data.user),
-            staptAmountExchanged: BigInt(events[i].data.stapt_amount_exchanged),
-            aptAmountToRcv: BigInt(events[i].data.apt_amount_to_rcv),
-          });
-          break;
-        case types.DittoEventType.claim_aptos:
-          readableEvents.push({
-            user: new HexString(events[i].data.user),
-            aptAmountRcvd: BigInt(events[i].data.apt_amount_rcvd),
-          });
-          break;
-      }
-    }
-    return readableEvents;
   }
 
   public setVerifyTxnTimeoutMs(newValue: number) {
