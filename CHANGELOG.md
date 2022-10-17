@@ -6,6 +6,7 @@ Version changes are pinned to SDK releases.
 ## [Unreleased]
 
 - Set a maximum number of validators that can be added to Ditto.
+- Add events to Ditto. ([#15](https://github.com/ditto-research/ditto-staking-sdk/pull/15))
 
 ## [0.3.0]
 
