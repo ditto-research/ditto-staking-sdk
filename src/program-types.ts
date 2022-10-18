@@ -71,6 +71,7 @@ export interface StakeEvent {
   user: HexString;
   aptAmountStaked: bigint;
   staptAmountRcvd: bigint;
+  id: number;
 }
 
 export interface InstantUnstakeEvent {

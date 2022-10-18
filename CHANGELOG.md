@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
+## [Unreleased]
+
+- Add id to StakeEvent.
+
 ## [0.4.1]
 
 - upgrade aptos to 1.3.16
