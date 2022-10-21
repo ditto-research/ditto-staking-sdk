@@ -6,6 +6,7 @@ Version changes are pinned to SDK releases.
 ## [Unreleased]
 
 - Add id to StakeEvent.
+- Add entry point for id in StakeEvent.
 
 ## [0.4.1]
 
