@@ -44,3 +44,11 @@ export enum DittoEventType {
   validatorStakeDistribution = "validator_stake_distribution_events",
   addToPoolBuffer = "add_to_pool_buffer_events",
 }
+
+export enum WalletId {
+  BLOCTO = 1,
+  PONTEM = 2,
+  FEWCHA = 3,
+  MARTIAN = 4,
+  PETRA = 5,
+}

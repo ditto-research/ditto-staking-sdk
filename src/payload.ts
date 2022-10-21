@@ -35,6 +35,19 @@ export function stakeAptosPayload(amount: bigint): EntryFunctionPayload {
   };
 }
 
+export function stakeAptosWithIdPayload(
+  amount: bigint,
+  id: number
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.staking
+    }::stake_aptos_with_id`,
+    arguments: [Number(amount), id],
+    type_arguments: [],
+  };
+}
+
 export function instantUnstakePayload(amount: bigint): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${

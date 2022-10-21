@@ -3,9 +3,10 @@
 All notable changes to this project will be documented in this file.
 Version changes are pinned to SDK releases.
 
-## [Unreleased]
+## [0.5.0]
 
 - Add id to StakeEvent.
+- Add entry point for id in StakeEvent.
 
 ## [0.4.1]
 

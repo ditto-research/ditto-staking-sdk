@@ -43,6 +43,19 @@ export class Client {
     return txnRes;
   }
 
+  public async stakeAptosWithId(
+    amount: bigint,
+    id: number
+  ): Promise<types.TxnResponse> {
+    let stakeAptosPayload = payload.stakeAptosWithIdPayload(amount, id);
+    const txnRes = await utils.processTxn(
+      this._wallet,
+      stakeAptosPayload,
+      this._verifyTxnTimeoutMs
+    );
+    return txnRes;
+  }
+
   public async instantUnstake(amount: bigint): Promise<types.TxnResponse> {
     let instantUnstakePayload = payload.instantUnstakePayload(amount);
     const txnRes = await utils.processTxn(
