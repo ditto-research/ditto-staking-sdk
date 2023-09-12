@@ -18,6 +18,10 @@ export const ERROR_MAP = {
     115: "Ditto Admin is not allowed to perform this action.",
     116: "Exceeded maximum number of validators in Ditto Pool.",
     117: "There are no validators in Ditto Pool.",
+    118: "Address provided is not a delegation pool.",
+    119: "Delegation pool has already been added.",
+    120: "Ditto resource account signer has not been initialized.",
+    121: "Invalid/deprecated entry point",
   },
   ditto_config: {
     100: "Signer is not the Ditto admin.",

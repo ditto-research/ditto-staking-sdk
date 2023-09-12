@@ -25,6 +25,38 @@ export function initializePayload(
   };
 }
 
+export function createDittoSignerPayload(): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.staking
+    }::create_ditto_signer`,
+    arguments: [],
+    type_arguments: [],
+  };
+}
+
+export function fundDittoSignerPayload(amount: bigint): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.staking
+    }::fund_ditto_signer`,
+    arguments: [Number(amount)],
+    type_arguments: [],
+  };
+}
+
+export function addDelegationPool(
+  delegationPool: HexString
+): EntryFunctionPayload {
+  return {
+    function: `${Ditto.contractAddress.toString()}::${
+      types.DittoModule.staking
+    }::add_delegation_pool`,
+    arguments: [delegationPool.toString()],
+    type_arguments: [],
+  };
+}
+
 export function stakeAptosPayload(amount: bigint): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${
@@ -78,16 +110,6 @@ export function claimAptosPayload(): EntryFunctionPayload {
   };
 }
 
-export function addValidatorPayload(): EntryFunctionPayload {
-  return {
-    function: `${Ditto.contractAddress.toString()}::${
-      types.DittoModule.staking
-    }::add_validator`,
-    arguments: [],
-    type_arguments: [],
-  };
-}
-
 export function updateDittoStatePayload(): EntryFunctionPayload {
   return {
     function: `${Ditto.contractAddress.toString()}::${
@@ -104,30 +126,6 @@ export function distributeUnstakedCoinsPayload(): EntryFunctionPayload {
       types.DittoModule.staking
     }::distribute_unstaked_coins`,
     arguments: [],
-    type_arguments: [],
-  };
-}
-
-export function whitelistValidatorPayload(
-  validator: HexString
-): EntryFunctionPayload {
-  return {
-    function: `${Ditto.contractAddress.toString()}::${
-      types.DittoModule.staking
-    }::whitelist_validator`,
-    arguments: [validator.toString()],
-    type_arguments: [],
-  };
-}
-
-export function joinValidatorSetPayload(
-  poolAddress: HexString
-): EntryFunctionPayload {
-  return {
-    function: `${Ditto.contractAddress.toString()}::${
-      types.DittoModule.staking
-    }::join_validator_set`,
-    arguments: [poolAddress.toString()],
     type_arguments: [],
   };
 }

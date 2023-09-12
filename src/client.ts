@@ -86,16 +86,6 @@ export class Client {
     return txnRes;
   }
 
-  public async addValidator(): Promise<types.TxnResponse> {
-    let addValidatorPayload = payload.addValidatorPayload();
-    const txnRes = await utils.processTxn(
-      this._wallet,
-      addValidatorPayload,
-      this._verifyTxnTimeoutMs
-    );
-    return txnRes;
-  }
-
   public async registerStaptos(): Promise<types.TxnResponse> {
     let registerStAptosPayload = payload.registerStAptosPayload();
     const txnRes = await utils.processTxn(

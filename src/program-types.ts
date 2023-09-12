@@ -6,7 +6,6 @@ export interface DittoPool {
   aptosBufferAmount: bigint;
   pendingStakeAmount: bigint;
   treasuryAmount: bigint;
-  validatorStates: TableKeysAndHandle<HexString>; // Table<address, ValidatorState>
   epoch: bigint;
   totalPendingClaim: bigint;
   claimPoolAmount: bigint;
@@ -14,10 +13,10 @@ export interface DittoPool {
   validatorTicketsTableHandle: string; // Table<address, vector<DelayedUnstakeTicket>>
 }
 
-export interface ValidatorState {
-  ownerCapability: OwnerCapability;
+export interface DelegationPoolState {
   startOfEpochBalance: bigint;
-  distributedBalance: bigint;
+  distributedBalanace: bigint;
+  totalPendingClaim: bigint;
 }
 
 export interface OwnerCapability {
@@ -34,9 +33,6 @@ export interface DelayedUnstakeTicket {
   aptosToReceive: bigint;
 }
 
-export interface ValidatorWhitelist {
-  whitelistTableHandle: string; // Table<address, bool>
-}
 export interface DittoConfig {
   poolBufferPct: bigint;
   poolBufferFeeIncreaseThresholdPct: bigint;

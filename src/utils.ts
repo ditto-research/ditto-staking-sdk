@@ -126,50 +126,12 @@ export async function fundAccount(
   aptosAccount: MaybeHexString,
   amount: number = 1000000
 ): Promise<string[]> {
-  const tnxHashes = await faucetClient.faucetRequester.request<Array<string>>({
-    method: "POST",
-    url: "mint",
-    query: {
-      address: HexString.ensure(aptosAccount).noPrefix(),
-      amount,
-    },
-  });
+  const tnxHashes = await faucetClient.fundAccount(
+    HexString.ensure(aptosAccount).noPrefix(),
+    amount
+  );
 
-  const promises: Promise<void>[] = [];
-  for (let i = 0; i < tnxHashes.length; i += 1) {
-    const tnxHash = tnxHashes[i];
-    promises.push(faucetClient.waitForTransaction(tnxHash));
-  }
-  await Promise.all(promises);
   return tnxHashes;
-}
-
-// Raw JSON objects from Aptos REST endpoint
-
-export async function getStakePoolResource(
-  validatorKey: HexString
-): Promise<any> {
-  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
-    validatorKey,
-    "0x1::stake::StakePool"
-  );
-  return validatorStakePool.data;
-}
-
-export async function getValidatorSetResource(): Promise<any> {
-  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
-    "0x1",
-    "0x1::stake::ValidatorSet"
-  );
-  return validatorStakePool.data;
-}
-
-export async function getStakingConfigResource(): Promise<any> {
-  let validatorStakePool = await Ditto.aptosClient.getAccountResource(
-    "0x1",
-    "0x1::staking_config::StakingConfig"
-  );
-  return validatorStakePool.data;
 }
 
 export function getExpectedInstantUnstakingFees(

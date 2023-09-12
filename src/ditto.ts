@@ -46,15 +46,26 @@ export class Ditto {
   }
   private _dittoPool: programTypes.DittoPool = null;
 
-  public get validatorWhitelist(): programTypes.ValidatorWhitelist {
-    return this._validatorWhitelist;
-  }
-  private _validatorWhitelist: programTypes.ValidatorWhitelist = null;
-
   public get verifyTxnTimeoutMs(): number {
     return this._verifyTxnTimeoutMs;
   }
   private _verifyTxnTimeoutMs: number;
+
+  public get delegationPoolStates(): Map<
+    HexString,
+    programTypes.DelegationPoolState
+  > {
+    return this._delegationPoolStates;
+  }
+  private _delegationPoolStates: Map<
+    HexString,
+    programTypes.DelegationPoolState
+  >;
+
+  public get delegatorAddr(): HexString {
+    return this._delegatorAddr;
+  }
+  private _delegatorAddr: HexString;
 
   public async load(
     wallet: Wallet = new DummyWallet(),
@@ -72,7 +83,7 @@ export class Ditto {
     try {
       await this.refreshDittoResources();
     } catch (e) {
-      console.log("Unable to load Ditto smart contract state");
+      console.log("Unable to load Ditto smart contract state", e);
       return;
     }
 
@@ -176,20 +187,6 @@ export class Ditto {
     return txnRes;
   }
 
-  public async updateRequireValidatorWhitelist(
-    requireValidatorWhitelist: boolean
-  ): Promise<types.TxnResponse> {
-    let updateRequireValidatorWhitelistPayload =
-      payload.updateRequireValidatorWhitelist(requireValidatorWhitelist);
-    const txnRes = await utils.processTxn(
-      this._wallet,
-      updateRequireValidatorWhitelistPayload,
-      this._verifyTxnTimeoutMs
-    );
-    await this.refreshDittoConfig();
-    return txnRes;
-  }
-
   public async updateMaxNValidators(
     maxNValidators: bigint
   ): Promise<types.TxnResponse> {
@@ -225,31 +222,6 @@ export class Ditto {
     return txnRes;
   }
 
-  public async whitelistValidator(
-    validator: HexString
-  ): Promise<types.TxnResponse> {
-    let whitelistValidatorPayload =
-      payload.whitelistValidatorPayload(validator);
-    const txnRes = await utils.processTxn(
-      this._wallet,
-      whitelistValidatorPayload,
-      this._verifyTxnTimeoutMs
-    );
-    return txnRes;
-  }
-
-  public async joinValidatorSet(
-    poolAddress: HexString
-  ): Promise<types.TxnResponse> {
-    let joinValidatorSetPayload = payload.joinValidatorSetPayload(poolAddress);
-    const txnRes = await utils.processTxn(
-      this._wallet,
-      joinValidatorSetPayload,
-      this._verifyTxnTimeoutMs
-    );
-    return txnRes;
-  }
-
   public async fillDittoBuffer(): Promise<types.TxnResponse> {
     let fillDittoBufferPayload = payload.fillDittoBuffer();
     const txnRes = await utils.processTxn(
@@ -269,12 +241,6 @@ export class Ditto {
       throw Error("DittoPool fetch returned null");
     }
 
-    let validatorStatesTableKeys: HexString[] = [];
-    for (let i = 0; i < resource.data.validator_states.keys.length; i++) {
-      let key = new HexString(resource.data.validator_states.keys[i]);
-      validatorStatesTableKeys.push(key);
-    }
-
     let userClaimStateTableKeys: HexString[] = [];
     for (let i = 0; i < resource.data.user_claim_state.keys.length; i++) {
       let key = new HexString(resource.data.user_claim_state.keys[i]);
@@ -287,10 +253,6 @@ export class Ditto {
       aptosBufferAmount: BigInt(resource.data.aptos_buffer.value),
       pendingStakeAmount: BigInt(resource.data.pending_stake.value),
       treasuryAmount: BigInt(resource.data.treasury.value),
-      validatorStates: {
-        keys: validatorStatesTableKeys,
-        handle: resource.data.validator_states.table.handle,
-      },
       epoch: BigInt(resource.data.epoch),
       totalPendingClaim: BigInt(resource.data.total_pending_claim),
       claimPoolAmount: BigInt(resource.data.claim_pool.value),
@@ -329,20 +291,6 @@ export class Ditto {
     };
   }
 
-  public async refreshValidatorWhitelist() {
-    const resource: any = await this._aptosClient.getAccountResource(
-      this._contractAddress,
-      `${this._contractAddress}::${types.DittoModule.staking}::ValidatorWhitelist`
-    );
-    if (resource == null) {
-      throw Error("Validator whitelist fetch returned null");
-    }
-
-    this._validatorWhitelist = {
-      whitelistTableHandle: resource.data.whitelist.handle,
-    };
-  }
-
   public async refreshValidatorLockupBuffer() {
     const resource: any = await this._aptosClient.getAccountResource(
       this._contractAddress,
@@ -367,39 +315,53 @@ export class Ditto {
     };
   }
 
+  public async refreshDelegationPoolStates() {
+    const resource: any = await this._aptosClient.getAccountResource(
+      this._contractAddress,
+      `${this._contractAddress}::${types.DittoModule.staking}::DittoSignerState`
+    );
+
+    this._delegatorAddr = new HexString(resource.data.signer_cap.account);
+
+    let dpsToStore: Map<HexString, programTypes.DelegationPoolState> =
+      new Map();
+    let dps = resource.data.delegation_pool_states;
+    for (let i = 0; i < dps.keys.length; i++) {
+      let key = new HexString(dps.keys[i]);
+      let tableItemReq: Types.TableItemRequest = {
+        key_type: "address",
+        value_type: `${this._contractAddress.toString()}::${
+          types.DittoModule.staking
+        }::DelegationPoolState`,
+        key: key.toString(),
+      };
+
+      let item = await this._aptosClient.getTableItem(
+        dps.table.handle,
+        tableItemReq
+      );
+
+      dpsToStore.set(key, {
+        startOfEpochBalance: item.start_of_epoch_balance,
+        distributedBalanace: item.distributed_balance,
+        totalPendingClaim: item.total_pending_claim,
+      });
+    }
+
+    this._delegationPoolStates = dpsToStore;
+  }
+
   public async refreshDittoResources() {
-    await this.refreshDittoPool();
-    await this.refreshDittoConfig();
-    await this.refreshValidatorWhitelist();
-    await this.refreshValidatorLockupBuffer();
+    await Promise.all([
+      this.refreshDittoPool(),
+      this.refreshDittoConfig(),
+      this.refreshValidatorLockupBuffer(),
+      this.refreshDelegationPoolStates(),
+    ]);
+
     if (this._isInitialized == false) {
       this._isInitialized = true;
     }
-  }
-
-  public async getValidatorStateFromTable(
-    validatorKey: HexString
-  ): Promise<programTypes.ValidatorState> {
-    let tableItemReq: Types.TableItemRequest = {
-      key_type: "address",
-      value_type: `${this._contractAddress.toString()}::${
-        types.DittoModule.staking
-      }::ValidatorState`,
-      key: validatorKey.toString(),
-    };
-
-    let item = await this._aptosClient.getTableItem(
-      this._dittoPool.validatorStates.handle,
-      tableItemReq
-    );
-
-    return {
-      ownerCapability: {
-        poolAddress: new HexString(item.owner_capability.pool_address),
-      },
-      startOfEpochBalance: BigInt(item.start_of_epoch_balance),
-      distributedBalance: BigInt(item.distributed_balance),
-    };
   }
 
   public async getDelayedUnstakeTicketsFromTable(
@@ -449,23 +411,6 @@ export class Ditto {
       availableClaim: BigInt(item.available_claim),
       pendingClaim: BigInt(item.pending_claim),
     };
-  }
-
-  public async getValidatorWhitelistFromTable(
-    validatorKey: HexString
-  ): Promise<boolean> {
-    let tableItemReq: Types.TableItemRequest = {
-      key_type: "address",
-      value_type: "bool",
-      key: validatorKey.toString(),
-    };
-
-    let item = await this._aptosClient.getTableItem(
-      this._validatorWhitelist.whitelistTableHandle,
-      tableItemReq
-    );
-
-    return item;
   }
 
   public async getEvents(eventType: types.DittoEventType): Promise<any> {
